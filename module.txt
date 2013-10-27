@@ -1,0 +1,9 @@
+{
+    "id" : "Hunger",
+    "version" : "0.1.0",
+    "author" : "Esapetri",
+    "displayName" : "Hunger and consumables",
+    "description" : "This mod makes you able to die from starvation and introduces a variety of foods",
+    "dependencies" : [],
+    "isServerSideOnly" : false
+}
