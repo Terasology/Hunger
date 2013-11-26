@@ -1,11 +1,11 @@
 /*
- * Copyright 2012 Esa-Petri Tirkkonen <esereja@yahoo.co.uk>
+ * Copyright 2013 MovingBlocks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,18 +15,8 @@
  */
 package org.terasology.hunger;
 
-import org.terasology.entitySystem.Component;
-
 /**
- * @author Esa-Petri Tirkkonen <esereja@yahoo.co.uk>
+ * @author UltimateBudgie
  */
-public final class ConsumableComponent implements Component {
-    // Configuration options
-	public int filling=1;
-	public int uses=1;
-	
-	//add effects here when bodycombonent is ready
-    public ConsumableComponent() {
-    }
-
+public class HungerCommands {
 }

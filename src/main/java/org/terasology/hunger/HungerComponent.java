@@ -1,11 +1,11 @@
 /*
- * Copyright 2012 Esa-Petri Tirkkonen <esereja@yahoo.co.uk>
+ * Copyright 2013 MovingBlocks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,34 +18,53 @@ package org.terasology.hunger;
 import org.terasology.entitySystem.Component;
 
 /**
- * @author Esa-Petri Tirkkonen <esereja@yahoo.co.uk>
+ * @author UltimateBudgie
  */
-public final class HungerComponent implements Component {
-    // Configuration options
-    public int maxContentment = 20;
-    public float deregenRate = 0.0f;
-    public float waitBeforeDeregen = 0.0f;
-    public float waitBeetweenDamage = 0.0f;
+public class HungerComponent implements Component{
+    //General Hunger Settings
+    /**
+     * The maximum amount of food an entity can "contain".
+     * The minimum is 0.
+     */
+    public float maxFoodCapacity = 100;
 
-    public int currentContentment = 20;
+    /**
+     * The current amount of food the entity has
+     */
+    public float currentFoodCapacity = maxFoodCapacity;
 
-    // Regen info
-    public float timeSinceLastEat = 0.0f;
-    public float timeSinceLastDamage = 0.0f;
-    public float partialDeregen = 0.0f;
+    /**
+     * The amount of food decreased at each foodDecayInterval (below)
+     */
+    public float foodDecreaseAmount = 5;
 
-    public HungerComponent() {
-    }
+    /**
+     * The interval (in milliseconds) at which foodDecreaseAmount (above) is applied to the component
+     */
+    public int foodDecreaseInterval = 60000;
 
-    public HungerComponent(int maxContentment, float deregenRate, float waitBeforeDeregen) {
-        this.maxContentment = maxContentment;
-        this.currentContentment = maxContentment;
-        this.deregenRate = deregenRate;
-        this.waitBeforeDeregen = waitBeforeDeregen;
-    }
-    
-    public int hunger(){
-    	return maxContentment-currentContentment;
-    }
-    
+    public long nextFoodDecreaseTick;
+
+    //Health loss settings
+    /**
+     *  Whether or not an entity will lose health after going below a certain food capacity
+     */
+    public boolean loseHealth = true;
+
+    /**
+     *  If loseHealth is enabled, the entity will begin to lose health if their food capacity is <= this threshold
+     */
+    public float healthLossThreshold = 0;
+
+    /**
+     * The amount of health decreased at every healthDecreaseInterval(below)
+     */
+    public float healthDecreaseAmount = 5;
+
+    /**
+     * The interval (in milliseconds) at which healthDecreaseAmount (above) is applied to the component
+     */
+    public int healthDecreaseInterval = 10000;
+
+    public long nextHealthDecreaseTick;
 }

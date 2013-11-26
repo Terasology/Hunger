@@ -1,9 +1,7 @@
 {
     "id" : "Hunger",
     "version" : "0.1.0",
-    "author" : "Esapetri",
-    "displayName" : "Hunger and consumables",
-    "description" : "This mod makes you able to die from starvation and introduces a variety of foods",
-    "dependencies" : [],
-    "isServerSideOnly" : false
+    "author" : "UltimateBudgie",
+    "displayName" : "Hunger, Thirst and Food",
+    "description" : "This module introduces Hunger, Thirst and various effects related to them."
 }
