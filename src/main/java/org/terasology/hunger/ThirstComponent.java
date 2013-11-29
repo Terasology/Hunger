@@ -18,7 +18,7 @@ package org.terasology.hunger;
 import org.terasology.entitySystem.Component;
 
 /**
- * @author UltimateBudgie
+ * @author UltimateBudgie <TheUltimateBudgie@gmail.com>
  */
 public class ThirstComponent implements Component {
     //General Thirst Settings

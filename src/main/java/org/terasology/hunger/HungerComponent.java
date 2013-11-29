@@ -18,9 +18,9 @@ package org.terasology.hunger;
 import org.terasology.entitySystem.Component;
 
 /**
- * @author UltimateBudgie
+ * @author UltimateBudgie <TheUltimateBudgie@gmail.com>
  */
-public class HungerComponent implements Component{
+public class HungerComponent implements Component {
     //General Hunger Settings
     /**
      * The maximum amount of food an entity can "contain".
@@ -59,12 +59,12 @@ public class HungerComponent implements Component{
     /**
      * The amount of health decreased at every healthDecreaseInterval(below)
      */
-    public float healthDecreaseAmount = 5;
+    public int healthDecreaseAmount = 15;
 
     /**
      * The interval (in milliseconds) at which healthDecreaseAmount (above) is applied to the component
      */
-    public int healthDecreaseInterval = 10000;
+    public int healthDecreaseInterval = 30000;
 
     public long nextHealthDecreaseTick;
 }

@@ -17,23 +17,26 @@ package org.terasology.hunger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.In;
-import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.entitySystem.systems.UpdateSubscriberSystem;
 import org.terasology.logic.console.Command;
-import org.terasology.logic.console.Console;
+import org.terasology.logic.console.CommandParam;
+import org.terasology.logic.health.BeforeHealEvent;
+import org.terasology.logic.health.DoDamageEvent;
 import org.terasology.logic.health.HealthComponent;
 import org.terasology.logic.players.event.OnPlayerSpawnedEvent;
+import org.terasology.network.ClientComponent;
 
 /**
- * @author UltimateBudgie
+ * @author UltimateBudgie <TheUltimateBudgie@gmail.com>
  */
 
-@RegisterSystem(RegisterMode.AUTHORITY)
+@RegisterSystem
 public class HungerSystem implements UpdateSubscriberSystem {
     private static final Logger logger = LoggerFactory.getLogger(HungerSystem.class);
 
@@ -43,13 +46,8 @@ public class HungerSystem implements UpdateSubscriberSystem {
     @In
     private org.terasology.engine.Time time;
 
-    /*@In
-    private Console console;*/
-
     @Override
     public void initialise() {
-        logger.debug("Hunger intialising.");
-        //console.registerCommandProvider(new HungerCommands());
     }
 
     @Override
@@ -68,6 +66,7 @@ public class HungerSystem implements UpdateSubscriberSystem {
                     hunger.currentFoodCapacity = 0;
                 }
                 hunger.nextFoodDecreaseTick = time.getGameTimeInMs() + hunger.foodDecreaseInterval;
+                entity.saveComponent(hunger);
             }
 
             //Check to see if health should be decreased
@@ -75,8 +74,7 @@ public class HungerSystem implements UpdateSubscriberSystem {
                 if (hunger.loseHealth) {
                     if (hunger.currentFoodCapacity <= hunger.healthLossThreshold) {
                         if (time.getGameTimeInMs() >= hunger.nextHealthDecreaseTick) {
-                            HealthComponent health = entity.getComponent(HealthComponent.class);
-                            health.currentHealth -= hunger.healthDecreaseAmount;
+                            entity.send(new DoDamageEvent(hunger.healthDecreaseAmount));
                             hunger.nextHealthDecreaseTick = time.getGameTimeInMs() + hunger.healthDecreaseInterval;
                         }
                     }
@@ -85,26 +83,87 @@ public class HungerSystem implements UpdateSubscriberSystem {
         }
     }
 
-    @ReceiveEvent
-    public void onPlayerSpawn(OnPlayerSpawnedEvent event, EntityRef player) {
-        logger.debug("Hunger Component added");
-        player.addComponent(new HungerComponent());
-    }
-
-    @Command(shortDescription = "Check's your hunger/food level.", runOnServer = true)
-    public void test(EntityRef client) {
-        logger.info("TEST");
-    }
-
-    @Command(shortDescription = "Check's your hunger/food level.", runOnServer = true)
-    public String checkHunger(EntityRef client) {
-        logger.debug("checkHunger");
-        if (client.hasComponent(HungerComponent.class)) {
-            HungerComponent hunger = client.getComponent(HungerComponent.class);
-            return "Current Food Level: " + hunger.currentFoodCapacity + "\n" + "Max Food Capacity: "
-                    + hunger.maxFoodCapacity;
-        } else {
-            return "You don't have a hunger level!!!";
+    @ReceiveEvent(components = {HungerComponent.class})
+    public void onHealthRegen(BeforeHealEvent event, EntityRef entity) {
+        HungerComponent hunger = entity.getComponent(HungerComponent.class);
+        if (!hunger.loseHealth) {
+            return;
         }
+        if (hunger.currentFoodCapacity <= hunger.healthLossThreshold) {
+            event.consume();
+        }
+    }
+
+    @ReceiveEvent(components = {HungerComponent.class})
+    public void onPlayerRespawn(OnPlayerSpawnedEvent event, EntityRef player) {
+        HungerComponent hunger = player.getComponent(HungerComponent.class);
+        hunger.currentFoodCapacity = hunger.maxFoodCapacity;
+        hunger.nextFoodDecreaseTick = time.getGameTimeInMs() + hunger.foodDecreaseInterval;
+        player.saveComponent(hunger);
+    }
+
+    @ReceiveEvent
+    public void onPlayerFirstSpawn(OnPlayerSpawnedEvent event, EntityRef player) {
+        HungerComponent hunger = new HungerComponent();
+        hunger.nextFoodDecreaseTick = time.getGameTimeInMs() + hunger.foodDecreaseInterval;
+        player.addComponent(hunger);
+    }
+
+    @Command(shortDescription = "Temp testing command", runOnServer = true)
+    public void test(EntityRef client) {
+        logger.info("ID:" + client.getComponent(ClientComponent.class).character.getId());
+        for (Component c : client.getComponent(ClientComponent.class).character.iterateComponents()) {
+            logger.info(c.toString());
+        }
+    }
+
+    @Command(shortDescription = "Check's your hunger/food level.", runOnServer = true)
+    public String hungerCheck(EntityRef client) {
+        EntityRef character = client.getComponent(ClientComponent.class).character;
+        if (character.hasComponent(HungerComponent.class)) {
+            HungerComponent hunger = character.getComponent(HungerComponent.class);
+            return "Current Food Level: " + hunger.currentFoodCapacity + "/" + hunger.maxFoodCapacity;
+        } else {
+            return "You don't have a hunger level.";
+        }
+    }
+
+    @Command(shortDescription = "Check's your hunger/food level.", runOnServer = true)
+    public String hungerSet(@CommandParam(value = "FoodLevel")float newFood, EntityRef client) {
+        EntityRef character = client.getComponent(ClientComponent.class).character;
+        if (!character.hasComponent(HungerComponent.class)) {
+            return "You don't have a hunger level.";
+        }
+        HungerComponent hunger = character.getComponent(HungerComponent.class);
+        if (newFood < 0) {
+            hunger.currentFoodCapacity = 0;
+            character.saveComponent(hunger);
+            return "Food level cannot be below 0. Setting to 0.";
+        }
+        if (newFood > hunger.maxFoodCapacity) {
+            hunger.currentFoodCapacity = hunger.maxFoodCapacity;
+            character.saveComponent(hunger);
+            return "Food level cannot be above Max Food Capacity. Setting to Max(" + hunger.maxFoodCapacity + ")";
+        }
+        hunger.currentFoodCapacity = newFood;
+        character.saveComponent(hunger);
+        return "Food level successfully set to: " + newFood;
+    }
+
+    @Command(shortDescription = "Check's your hunger/food level.", runOnServer = true)
+    public String hungerSetMax(@CommandParam(value = "MaxFoodLevel")float newMax, EntityRef client) {
+        EntityRef character = client.getComponent(ClientComponent.class).character;
+        if (!character.hasComponent(HungerComponent.class)) {
+            return "You don't have a hunger level.";
+        }
+        HungerComponent hunger = character.getComponent(HungerComponent.class);
+        if (newMax <= 0) {
+            hunger.maxFoodCapacity = 100;
+            character.saveComponent(hunger);
+            return "Max Food Level cannot be below or equal to 0. Setting to default (100)";
+        }
+        hunger.maxFoodCapacity = newMax;
+        character.saveComponent(hunger);
+        return "Max Food Level successfully set to: " + newMax;
     }
 }
