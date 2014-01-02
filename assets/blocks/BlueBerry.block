@@ -15,22 +15,12 @@
  */
 
 /**
- * GooseGrass
+ * BlueBerry
  */
 {
-    "attachmentAllowed" : false,
-    "supportRequired" : true,
-    "shape" : "engine:billboard",
-    "replacementAllowed" : true,
-    "doubleSided" : true,
-    "penetrable" : true,
-    "shadowCasting" : false,
-    "hardness" : 1,
+    "basedOn" : "core:plant",
     "waving" : true,
-    "penetrable" : true,
-    "targetable" : true,
     "debrisOnDestroy" : true,
-    "colorSource" : "color_lut",
     "entity" : {
         "prefab" : "hunger:BlueBerry"
     }

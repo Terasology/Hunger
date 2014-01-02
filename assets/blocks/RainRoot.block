@@ -15,20 +15,11 @@
  */
 
 /**
- * GooseGrass
+ * RainRoot
  */
 {
-    "attachmentAllowed" : false,
-    "supportRequired" : true,
-    "shape" : "engine:billboard",
-    "replacementAllowed" : true,
-    "doubleSided" : true,
-    "penetrable" : true,
-    "shadowCasting" : false,
-    "hardness" : 1,
+    "basedOn" : "core:plant",
     "waving" : true,
-    "penetrable" : true,
-    "targetable" : true,
     "debrisOnDestroy" : true,
     "entity" : {
         "prefab" : "hunger:RainRoot"

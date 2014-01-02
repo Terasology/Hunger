@@ -15,22 +15,12 @@
  */
 
 /**
- * Apple
+ * WildApple
  */
 {
-    "attachmentAllowed" : false,
+    "basedOn" : "core:plant",
     "supportRequired" : false,
-    "shape" : "engine:billboard",
-    "replacementAllowed" : true,
-    "doubleSided" : true,
-    "penetrable" : true,
-    "shadowCasting" : false,
-    "hardness" : 1,
-    "waving" : false,
-    "penetrable" : true,
-    "targetable" : true,
     "debrisOnDestroy" : true,
-    "colorSource" : "color_lut",
     "entity" : {
         "prefab" : "hunger:Apple"
     }

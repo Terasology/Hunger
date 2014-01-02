@@ -18,17 +18,8 @@
  * Hmm, the colors on this thing don't look suspicious at all, it can't be bad to eat, can it?
  */
 {
-    "attachmentAllowed" : false,
-    "supportRequired" : true,
-    "shape" : "engine:billboard",
-    "replacementAllowed" : true,
-    "doubleSided" : true,
-    "penetrable" : true,
-    "shadowCasting" : false,
-    "hardness" : 1,
+    "basedOn" : "core:plant",
     "waving" : true,
-    "penetrable" : true,
-    "targetable" : true,
     "debrisOnDestroy" : true,
     "luminance" : 10,
     "entity" : {

@@ -18,17 +18,8 @@
  * Apple
  */
 {
-    "attachmentAllowed" : false,
+    "basedOn" : "core:plant",
     "supportRequired" : false,
-    "shape" : "engine:billboard",
-    "replacementAllowed" : true,
-    "doubleSided" : true,
-    "penetrable" : true,
-    "shadowCasting" : false,
-    "hardness" : 1,
-    "waving" : false,
-    "penetrable" : true,
-    "targetable" : true,
     "debrisOnDestroy" : true,
     "entity" : {
         "prefab" : "hunger:Apple"

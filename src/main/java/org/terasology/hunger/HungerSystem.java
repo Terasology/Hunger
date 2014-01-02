@@ -117,7 +117,7 @@ public class HungerSystem implements UpdateSubscriberSystem {
         }
     }
 
-    @Command(shortDescription = "Check's your hunger/food level.", runOnServer = true)
+    @Command(shortDescription = "Checks your hunger/food level.", runOnServer = true)
     public String hungerCheck(EntityRef client) {
         EntityRef character = client.getComponent(ClientComponent.class).character;
         if (character.hasComponent(HungerComponent.class)) {
@@ -128,7 +128,7 @@ public class HungerSystem implements UpdateSubscriberSystem {
         }
     }
 
-    @Command(shortDescription = "Check's your hunger/food level.", runOnServer = true)
+    @Command(shortDescription = "Sets your current hunger level.", runOnServer = true)
     public String hungerSet(@CommandParam(value = "FoodLevel")float newFood, EntityRef client) {
         EntityRef character = client.getComponent(ClientComponent.class).character;
         if (!character.hasComponent(HungerComponent.class)) {
@@ -150,7 +150,7 @@ public class HungerSystem implements UpdateSubscriberSystem {
         return "Food level successfully set to: " + newFood;
     }
 
-    @Command(shortDescription = "Check's your hunger/food level.", runOnServer = true)
+    @Command(shortDescription = "Sets your max food level.", runOnServer = true)
     public String hungerSetMax(@CommandParam(value = "MaxFoodLevel")float newMax, EntityRef client) {
         EntityRef character = client.getComponent(ClientComponent.class).character;
         if (!character.hasComponent(HungerComponent.class)) {
