@@ -23,6 +23,7 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.In;
+import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.entitySystem.systems.UpdateSubscriberSystem;
 import org.terasology.logic.console.Command;
@@ -37,9 +38,9 @@ import org.terasology.network.ClientComponent;
  * @author UltimateBudgie <TheUltimateBudgie@gmail.com>
  */
 
-@RegisterSystem
-public class HungerSystem extends BaseComponentSystem implements UpdateSubscriberSystem {
-    private static final Logger logger = LoggerFactory.getLogger(HungerSystem.class);
+@RegisterSystem(RegisterMode.AUTHORITY)
+public class HungerAuthoritySystem extends BaseComponentSystem implements UpdateSubscriberSystem {
+    private static final Logger logger = LoggerFactory.getLogger(HungerAuthoritySystem.class);
 
     @In
     private EntityManager entityManager;
@@ -105,9 +106,11 @@ public class HungerSystem extends BaseComponentSystem implements UpdateSubscribe
 
     @ReceiveEvent
     public void onPlayerFirstSpawn(OnPlayerSpawnedEvent event, EntityRef player) {
-        HungerComponent hunger = new HungerComponent();
-        hunger.nextFoodDecreaseTick = time.getGameTimeInMs() + hunger.foodDecreaseInterval;
-        player.addComponent(hunger);
+        if (!player.hasComponent(HungerComponent.class)) {
+            HungerComponent hunger = new HungerComponent();
+            hunger.nextFoodDecreaseTick = time.getGameTimeInMs() + hunger.foodDecreaseInterval;
+            player.addComponent(hunger);
+        }
     }
 
     @Command(shortDescription = "Temp testing command", runOnServer = true)
@@ -130,7 +133,7 @@ public class HungerSystem extends BaseComponentSystem implements UpdateSubscribe
     }
 
     @Command(shortDescription = "Sets your current hunger level.", runOnServer = true)
-    public String hungerSet(@CommandParam(value = "FoodLevel")float newFood, EntityRef client) {
+    public String hungerSet(@CommandParam(value = "FoodLevel") float newFood, EntityRef client) {
         EntityRef character = client.getComponent(ClientComponent.class).character;
         if (!character.hasComponent(HungerComponent.class)) {
             return "You don't have a hunger level.";
@@ -152,7 +155,7 @@ public class HungerSystem extends BaseComponentSystem implements UpdateSubscribe
     }
 
     @Command(shortDescription = "Sets your max food level.", runOnServer = true)
-    public String hungerSetMax(@CommandParam(value = "MaxFoodLevel")float newMax, EntityRef client) {
+    public String hungerSetMax(@CommandParam(value = "MaxFoodLevel") float newMax, EntityRef client) {
         EntityRef character = client.getComponent(ClientComponent.class).character;
         if (!character.hasComponent(HungerComponent.class)) {
             return "You don't have a hunger level.";
