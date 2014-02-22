@@ -1,0 +1,41 @@
+{
+    "type": "HungerAndThirstWindow",
+    "skin": "HUD",
+    "contents": {
+        "type": "relativeLayout",
+        "contents": [
+            {
+                "type": "UILoadBar",
+                "id": "hunger",
+                "fillTexture": "Hunger:hungerBar",
+                "layoutInfo": {
+                    "width": 200,
+                    "height": 10,
+                    "position-horizontal-center": {
+                        "offset": -150
+                    },
+                    "position-bottom": {
+                        "target": "BOTTOM",
+                        "offset": 80
+                    }
+                }
+            },
+            {
+                "type": "UILoadBar",
+                "id": "thirst",
+                "fillTexture": "Hunger:thirstBar",
+                "layoutInfo": {
+                    "width": 200,
+                    "height": 10,
+                    "position-horizontal-center": {
+                        "offset": 150
+                    },
+                    "position-bottom": {
+                        "target": "BOTTOM",
+                        "offset": 80
+                    }
+                }
+            }
+        ]
+    }
+}

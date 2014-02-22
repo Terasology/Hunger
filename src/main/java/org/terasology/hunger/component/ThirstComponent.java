@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.hunger;
+package org.terasology.hunger.component;
 
 import org.terasology.entitySystem.Component;
 
@@ -28,20 +28,14 @@ public class ThirstComponent implements Component {
      */
     public float maxWaterCapacity = 100;
 
-    /**
-     * The current amount of Water the entity has
-     */
-    public float currentWaterCapacity = maxWaterCapacity;
+    public float lastCalculatedWater;
 
-    /**
-     * The amount of Water decreased at each waterDecreaseInterval (below)
-     */
-    public float waterDecreaseAmount = 5;
+    public long lastCalculatedTime;
 
     /**
      * The interval (in milliseconds) at which waterDecreaseAmount (above) is applied to the component
      */
-    public int waterDecreaseInterval = 10000;
+    public float waterDecayPerSecond = 0.5f;
 
     //Sprint related settings.
     /**

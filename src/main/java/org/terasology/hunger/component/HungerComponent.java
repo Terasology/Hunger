@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.hunger;
+package org.terasology.hunger.component;
 
 import org.terasology.entitySystem.Component;
 
@@ -28,31 +28,23 @@ public class HungerComponent implements Component {
      */
     public float maxFoodCapacity = 100;
 
-    /**
-     * The current amount of food the entity has
-     */
-    public float currentFoodCapacity = maxFoodCapacity;
+    public float lastCalculatedFood;
+
+    public long lastCalculatedTime;
 
     /**
      * The amount of food decreased at each foodDecayInterval (below)
      */
-    public float foodDecreaseAmount = 5;
-
-    /**
-     * The interval (in milliseconds) at which foodDecreaseAmount (above) is applied to the component
-     */
-    public int foodDecreaseInterval = 60000;
-
-    public long nextFoodDecreaseTick;
+    public float foodDecayPerSecond = 0.01f;
 
     //Health loss settings
     /**
-     *  Whether or not an entity will lose health after going below a certain food capacity
+     * Whether or not an entity will lose health after going below a certain food capacity
      */
     public boolean loseHealth = true;
 
     /**
-     *  If loseHealth is enabled, the entity will begin to lose health if their food capacity is <= this threshold
+     * If loseHealth is enabled, the entity will begin to lose health if their food capacity is <= this threshold
      */
     public float healthLossThreshold = 0;
 
