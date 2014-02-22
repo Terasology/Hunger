@@ -20,14 +20,14 @@ import org.terasology.hunger.HungerAndThirstUtils;
 import org.terasology.hunger.component.HungerComponent;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.registry.CoreRegistry;
-import org.terasology.rendering.nui.CoreScreenLayer;
 import org.terasology.rendering.nui.databinding.Binding;
+import org.terasology.rendering.nui.layers.hud.CoreHudWidget;
 import org.terasology.rendering.nui.widgets.UILoadBar;
 
 /**
  * @author Marcin Sciesinski <marcins78@gmail.com>
  */
-public class HungerAndThirstWindow extends CoreScreenLayer {
+public class HungerAndThirstWindow extends CoreHudWidget {
     @Override
     public void initialise() {
         UILoadBar hunger = find("hunger", UILoadBar.class);
