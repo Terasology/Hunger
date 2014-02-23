@@ -7,6 +7,7 @@
             {
                 "type": "UILoadBar",
                 "id": "hunger",
+                "animate": false,
                 "fillTexture": "Hunger:hungerBar",
                 "layoutInfo": {
                     "width": 200,
@@ -23,6 +24,7 @@
             {
                 "type": "UILoadBar",
                 "id": "thirst",
+                "animate": false,
                 "fillTexture": "Hunger:thirstBar",
                 "layoutInfo": {
                     "width": 200,
