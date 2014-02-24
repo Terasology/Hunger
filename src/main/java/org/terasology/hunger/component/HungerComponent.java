@@ -30,7 +30,7 @@ public class HungerComponent implements Component {
 
     public float lastCalculatedFood;
 
-    public long lastCalculatedTime;
+    public long lastCalculationTime;
 
     /**
      * The amount of food decreased at each foodDecayInterval (below)
@@ -39,14 +39,15 @@ public class HungerComponent implements Component {
 
     //Health loss settings
     /**
-     * Whether or not an entity will lose health after going below a certain food capacity
+     * The entity will begin to lose health if their food capacity is < this threshold. Set to 0, if you do not want
+     * the entity to lose health.
      */
-    public boolean loseHealth = true;
+    public float healthLossThreshold = 1;
 
     /**
-     * If loseHealth is enabled, the entity will begin to lose health if their food capacity is <= this threshold
+     * The entity will stop regenerating health if their food capacity is < this threshold.
      */
-    public float healthLossThreshold = 0;
+    public float healthStopRegenThreshold = 50;
 
     /**
      * The amount of health decreased at every healthDecreaseInterval(below)

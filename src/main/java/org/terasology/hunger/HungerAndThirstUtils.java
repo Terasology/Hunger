@@ -35,7 +35,7 @@ public final class HungerAndThirstUtils {
         }
 
         long gameTime = CoreRegistry.get(Time.class).getGameTimeInMs();
-        float foodDecay = hunger.foodDecayPerSecond * (gameTime - hunger.lastCalculatedTime) / 1000f;
+        float foodDecay = hunger.foodDecayPerSecond * (gameTime - hunger.lastCalculationTime) / 1000f;
         return Math.round(hunger.lastCalculatedFood - foodDecay);
     }
 
