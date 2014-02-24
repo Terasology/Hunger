@@ -25,7 +25,7 @@ import org.terasology.rendering.nui.NUIManager;
  * @author Marcin Sciesinski <marcins78@gmail.com>
  */
 @RegisterSystem(RegisterMode.CLIENT)
-public class HungerClientSystem extends BaseComponentSystem {
+public class HungerAndThirstClientSystem extends BaseComponentSystem {
     @In
     private NUIManager nuiManager;
 

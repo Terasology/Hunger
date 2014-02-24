@@ -30,31 +30,24 @@ public class ThirstComponent implements Component {
 
     public float lastCalculatedWater;
 
-    public long lastCalculatedTime;
+    public long lastCalculationTime;
 
     /**
-     * The interval (in milliseconds) at which waterDecreaseAmount (above) is applied to the component
+     * The decay of thirst under normal movement conditions
      */
-    public float waterDecayPerSecond = 0.5f;
-
-    //Sprint related settings.
+    public float normalDecayPerSecond = 0.5f;
     /**
-     * Whether or not sprinting will affect the decrease rate of thirst
+     * The decay of thirst under sprint movement conditions
      */
-    public boolean sprintDecrease;
+    public float sprintDecayPerSecond = 1f;
 
     /**
-     * The amount to multiply the waterDecreaseAmount while sprinting
+     * Current decay of thirst
      */
-    public float sprintMultiplier = 1.5f;
+    public float waterDecayPerSecond = normalDecayPerSecond;
 
     /**
-     * Whether or not to enable loss of sprint when thirst goes below sprintLossThreshold
+     * If the entity's water capacity is < to this threshold, sprinting is disabled!
      */
-    public boolean sprintLoss = true;
-
-    /**
-     * If the entity's water capacity is <= to this threshold, sprinting is disabled!
-     */
-    public float sprintLossThreshold = 0;
+    public float sprintLossThreshold = 50;
 }

@@ -18,6 +18,7 @@ package org.terasology.hunger.ui;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.hunger.HungerAndThirstUtils;
 import org.terasology.hunger.component.HungerComponent;
+import org.terasology.hunger.component.ThirstComponent;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.registry.CoreRegistry;
 import org.terasology.rendering.nui.databinding.Binding;
@@ -37,7 +38,7 @@ public class HungerAndThirstWindow extends CoreHudWidget {
                     public Float get() {
                         EntityRef character = CoreRegistry.get(LocalPlayer.class).getCharacterEntity();
                         HungerComponent hunger = character.getComponent(HungerComponent.class);
-                        return 1f * HungerAndThirstUtils.getHungerForEntity(character) / hunger.maxFoodCapacity;
+                        return HungerAndThirstUtils.getHungerForEntity(character) / hunger.maxFoodCapacity;
                     }
 
                     @Override
@@ -50,9 +51,9 @@ public class HungerAndThirstWindow extends CoreHudWidget {
                 new Binding<Float>() {
                     @Override
                     public Float get() {
-                        return 1f;
-//                        ThirstComponent thirst = CoreRegistry.get(LocalPlayer.class).getCharacterEntity().getComponent(ThirstComponent.class);
-//                        return 1f*thirst.currentWaterCapacity/thirst.maxWaterCapacity;
+                        EntityRef character = CoreRegistry.get(LocalPlayer.class).getCharacterEntity();
+                        ThirstComponent thirst = character.getComponent(ThirstComponent.class);
+                        return HungerAndThirstUtils.getThirstForEntity(character) / thirst.maxWaterCapacity;
                     }
 
                     @Override

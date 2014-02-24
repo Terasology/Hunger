@@ -28,7 +28,7 @@ public final class HungerAndThirstUtils {
     private HungerAndThirstUtils() {
     }
 
-    public static int getHungerForEntity(EntityRef entity) {
+    public static float getHungerForEntity(EntityRef entity) {
         HungerComponent hunger = entity.getComponent(HungerComponent.class);
         if (hunger == null) {
             return 0;
@@ -36,17 +36,17 @@ public final class HungerAndThirstUtils {
 
         long gameTime = CoreRegistry.get(Time.class).getGameTimeInMs();
         float foodDecay = hunger.foodDecayPerSecond * (gameTime - hunger.lastCalculationTime) / 1000f;
-        return Math.round(hunger.lastCalculatedFood - foodDecay);
+        return Math.max(0, hunger.lastCalculatedFood - foodDecay);
     }
 
-    public static int getThirstForEntity(EntityRef entity) {
+    public static float getThirstForEntity(EntityRef entity) {
         ThirstComponent thirst = entity.getComponent(ThirstComponent.class);
         if (thirst == null) {
             return 0;
         }
 
         long gameTime = CoreRegistry.get(Time.class).getGameTimeInMs();
-        float waterDecay = thirst.waterDecayPerSecond * (gameTime - thirst.lastCalculatedTime) / 1000f;
-        return Math.round(thirst.lastCalculatedWater - waterDecay);
+        float waterDecay = thirst.waterDecayPerSecond * (gameTime - thirst.lastCalculationTime) / 1000f;
+        return Math.max(0, thirst.lastCalculatedWater - waterDecay);
     }
 }

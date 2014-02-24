@@ -17,6 +17,7 @@ package org.terasology.hunger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.terasology.engine.Time;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
@@ -49,15 +50,7 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
     private EntityManager entityManager;
 
     @In
-    private org.terasology.engine.Time time;
-
-    @Override
-    public void initialise() {
-    }
-
-    @Override
-    public void shutdown() {
-    }
+    private Time time;
 
     @Override
     public void update(float delta) {
