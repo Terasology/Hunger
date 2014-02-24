@@ -64,7 +64,7 @@ public class ThirstAuthoritySystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void drinkConsumed(ActivateEvent event, EntityRef item, DrinkComponent drink) {
-        int filling = drink.filling;
+        float filling = drink.filling;
         EntityRef instigator = event.getInstigator();
         ThirstComponent thirst = instigator.getComponent(ThirstComponent.class);
         if (thirst != null) {
