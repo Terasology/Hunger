@@ -35,11 +35,11 @@ public class ThirstComponent implements Component {
     /**
      * The decay of thirst under normal movement conditions
      */
-    public float normalDecayPerSecond = 0.5f;
+    public float normalDecayPerSecond = 0.05f;
     /**
      * The decay of thirst under sprint movement conditions
      */
-    public float sprintDecayPerSecond = 1f;
+    public float sprintDecayPerSecond = 0.2f;
 
     /**
      * Current decay of thirst
