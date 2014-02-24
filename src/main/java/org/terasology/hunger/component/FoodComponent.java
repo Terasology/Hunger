@@ -21,5 +21,5 @@ import org.terasology.entitySystem.Component;
  * @author Marcin Sciesinski <marcins78@gmail.com>
  */
 public class FoodComponent implements Component {
-    public int filling;
+    public float filling;
 }

@@ -18,5 +18,5 @@ package org.terasology.hunger.component;
 import org.terasology.entitySystem.Component;
 
 public class DrinkComponent implements Component {
-    public int filling;
+    public float filling;
 }
