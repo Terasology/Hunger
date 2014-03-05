@@ -71,7 +71,8 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
     @ReceiveEvent(components = {HungerComponent.class})
     public void onHealthRegen(BeforeHealEvent event, EntityRef entity) {
         HungerComponent hunger = entity.getComponent(HungerComponent.class);
-        if (HungerAndThirstUtils.getHungerForEntity(entity) < hunger.healthStopRegenThreshold) {
+        if (event.getInstigator() == entity
+                && HungerAndThirstUtils.getHungerForEntity(entity) < hunger.healthStopRegenThreshold) {
             event.consume();
         }
     }
