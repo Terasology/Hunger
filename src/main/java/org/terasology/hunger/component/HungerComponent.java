@@ -16,6 +16,7 @@
 package org.terasology.hunger.component;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.network.Replicate;
 
 /**
  * @author UltimateBudgie <TheUltimateBudgie@gmail.com>
@@ -26,15 +27,19 @@ public class HungerComponent implements Component {
      * The maximum amount of food an entity can "contain".
      * The minimum is 0.
      */
+    @Replicate
     public float maxFoodCapacity = 100;
 
+    @Replicate
     public float lastCalculatedFood;
 
+    @Replicate
     public long lastCalculationTime;
 
     /**
      * The amount of food decreased at each foodDecayInterval (below)
      */
+    @Replicate
     public float foodDecayPerSecond = 0.01f;
 
     //Health loss settings
@@ -42,22 +47,27 @@ public class HungerComponent implements Component {
      * The entity will begin to lose health if their food capacity is < this threshold. Set to 0, if you do not want
      * the entity to lose health.
      */
+    @Replicate
     public float healthLossThreshold = 1;
 
     /**
      * The entity will stop regenerating health if their food capacity is < this threshold.
      */
+    @Replicate
     public float healthStopRegenThreshold = 50;
 
     /**
      * The amount of health decreased at every healthDecreaseInterval(below)
      */
+    @Replicate
     public int healthDecreaseAmount = 15;
 
     /**
      * The interval (in milliseconds) at which healthDecreaseAmount (above) is applied to the component
      */
+    @Replicate
     public int healthDecreaseInterval = 30000;
 
+    @Replicate
     public long nextHealthDecreaseTick;
 }

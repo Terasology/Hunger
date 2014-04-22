@@ -16,6 +16,7 @@
 package org.terasology.hunger.component;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.network.Replicate;
 
 /**
  * @author UltimateBudgie <TheUltimateBudgie@gmail.com>
@@ -26,28 +27,35 @@ public class ThirstComponent implements Component {
      * The maximum amount of Water an entity can "contain".
      * The minimum is 0.
      */
+    @Replicate
     public float maxWaterCapacity = 100;
 
+    @Replicate
     public float lastCalculatedWater;
 
+    @Replicate
     public long lastCalculationTime;
 
     /**
      * The decay of thirst under normal movement conditions
      */
+    @Replicate
     public float normalDecayPerSecond = 0.05f;
     /**
      * The decay of thirst under sprint movement conditions
      */
+    @Replicate
     public float sprintDecayPerSecond = 0.2f;
 
     /**
      * Current decay of thirst
      */
+    @Replicate
     public float waterDecayPerSecond = normalDecayPerSecond;
 
     /**
      * If the entity's water capacity is < to this threshold, sprinting is disabled!
      */
+    @Replicate
     public float sprintLossThreshold = 50;
 }
