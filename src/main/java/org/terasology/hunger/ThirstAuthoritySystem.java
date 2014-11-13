@@ -37,9 +37,9 @@ public class ThirstAuthoritySystem extends BaseComponentSystem {
     @In
     private Time time;
 
-    @ReceiveEvent(components = {ThirstComponent.class})
-    public void onPlayerRespawn(OnPlayerSpawnedEvent event, EntityRef player) {
-        ThirstComponent thirst = player.getComponent(ThirstComponent.class);
+    @ReceiveEvent
+    public void onPlayerRespawn(OnPlayerSpawnedEvent event, EntityRef player,
+                                ThirstComponent thirst) {
         thirst.lastCalculatedWater = thirst.maxWaterCapacity;
         thirst.lastCalculationTime = time.getGameTimeInMs();
         player.saveComponent(thirst);

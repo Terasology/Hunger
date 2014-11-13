@@ -68,18 +68,18 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
         }
     }
 
-    @ReceiveEvent(components = {HungerComponent.class})
-    public void onHealthRegen(BeforeHealEvent event, EntityRef entity) {
-        HungerComponent hunger = entity.getComponent(HungerComponent.class);
+    @ReceiveEvent
+    public void onHealthRegen(BeforeHealEvent event, EntityRef entity,
+                              HungerComponent hunger) {
         if (event.getInstigator() == entity
                 && HungerAndThirstUtils.getHungerForEntity(entity) < hunger.healthStopRegenThreshold) {
             event.consume();
         }
     }
 
-    @ReceiveEvent(components = {HungerComponent.class})
-    public void onPlayerRespawn(OnPlayerSpawnedEvent event, EntityRef player) {
-        HungerComponent hunger = player.getComponent(HungerComponent.class);
+    @ReceiveEvent
+    public void onPlayerRespawn(OnPlayerSpawnedEvent event, EntityRef player,
+                                HungerComponent hunger) {
         hunger.lastCalculatedFood = hunger.maxFoodCapacity;
         hunger.lastCalculationTime = time.getGameTimeInMs();
         player.saveComponent(hunger);
