@@ -1,6 +1,6 @@
 {
     "id" : "Hunger",
-    "version" : "0.1.0",
+    "version" : "0.1.1-SNAPSHOT",
     "author" : "UltimateBudgie, Marcin Sciesinski <marcins78@gmail.com>",
     "displayName" : "Hunger, Thirst and Food",
     "description" : "This module introduces Hunger, Thirst and various effects related to them."
