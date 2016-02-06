@@ -3,5 +3,11 @@
     "version" : "0.1.1-SNAPSHOT",
     "author" : "UltimateBudgie, Marcin Sciesinski <marcins78@gmail.com>",
     "displayName" : "Hunger, Thirst and Food",
+    "dependencies" : [
+         {
+             "id" : "Core",
+             "minVersion" : "1.0.0"
+         }
+     ],
     "description" : "This module introduces Hunger, Thirst and various effects related to them."
 }
