@@ -1,6 +1,6 @@
 {
     "id" : "Hunger",
-    "version" : "0.1.1-SNAPSHOT",
+    "version" : "0.1.2-SNAPSHOT",
     "author" : "UltimateBudgie, Marcin Sciesinski <marcins78@gmail.com>",
     "displayName" : "Hunger, Thirst and Food",
     "dependencies" : [

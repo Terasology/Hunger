@@ -37,6 +37,10 @@ public class HungerAndThirstWindow extends CoreHudWidget {
                     @Override
                     public Float get() {
                         EntityRef character = CoreRegistry.get(LocalPlayer.class).getCharacterEntity();
+                        if (character == null || !character.hasComponent(HungerComponent.class)) {
+                            return 0.0f;
+                        }
+
                         HungerComponent hunger = character.getComponent(HungerComponent.class);
                         return HungerAndThirstUtils.getHungerForEntity(character) / hunger.maxFoodCapacity;
                     }
@@ -52,6 +56,10 @@ public class HungerAndThirstWindow extends CoreHudWidget {
                     @Override
                     public Float get() {
                         EntityRef character = CoreRegistry.get(LocalPlayer.class).getCharacterEntity();
+                        if (character == null || !character.hasComponent(ThirstComponent.class)) {
+                            return 0.0f;
+                        }
+
                         ThirstComponent thirst = character.getComponent(ThirstComponent.class);
                         return HungerAndThirstUtils.getThirstForEntity(character) / thirst.maxWaterCapacity;
                     }
