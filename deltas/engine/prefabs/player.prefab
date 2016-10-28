@@ -1,0 +1,8 @@
+{
+  "Hunger": {
+    "maxFoodCapacity": 100
+  },
+  "Thirst": {
+    "maxWaterCapacity": 100
+  }
+}

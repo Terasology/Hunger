@@ -25,6 +25,7 @@ import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.hunger.component.DrinkComponent;
 import org.terasology.hunger.component.ThirstComponent;
+import org.terasology.hunger.event.DrinkConsumedEvent;
 import org.terasology.logic.characters.CharacterMoveInputEvent;
 import org.terasology.logic.common.ActivateEvent;
 import org.terasology.logic.players.event.OnPlayerSpawnedEvent;
@@ -38,21 +39,11 @@ public class ThirstAuthoritySystem extends BaseComponentSystem {
     private Time time;
 
     @ReceiveEvent
-    public void onPlayerRespawn(OnPlayerSpawnedEvent event, EntityRef player,
-                                ThirstComponent thirst) {
+    public void onPlayerSpawn(OnPlayerSpawnedEvent event, EntityRef player,
+                              ThirstComponent thirst) {
         thirst.lastCalculatedWater = thirst.maxWaterCapacity;
         thirst.lastCalculationTime = time.getGameTimeInMs();
         player.saveComponent(thirst);
-    }
-
-    @ReceiveEvent
-    public void onPlayerFirstSpawn(OnPlayerSpawnedEvent event, EntityRef player) {
-        if (!player.hasComponent(ThirstComponent.class)) {
-            ThirstComponent thirst = new ThirstComponent();
-            thirst.lastCalculatedWater = thirst.maxWaterCapacity;
-            thirst.lastCalculationTime = time.getGameTimeInMs();
-            player.addComponent(thirst);
-        }
     }
 
     @ReceiveEvent
@@ -71,6 +62,8 @@ public class ThirstAuthoritySystem extends BaseComponentSystem {
             thirst.lastCalculatedWater = Math.min(thirst.maxWaterCapacity, HungerAndThirstUtils.getThirstForEntity(instigator) + filling);
             thirst.lastCalculationTime = time.getGameTimeInMs();
             instigator.saveComponent(thirst);
+            item.send(new DrinkConsumedEvent());
+            event.consume();
         }
     }
 

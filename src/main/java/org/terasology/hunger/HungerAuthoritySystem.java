@@ -29,6 +29,7 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.entitySystem.systems.UpdateSubscriberSystem;
 import org.terasology.hunger.component.FoodComponent;
 import org.terasology.hunger.component.HungerComponent;
+import org.terasology.hunger.event.FoodConsumedEvent;
 import org.terasology.logic.common.ActivateEvent;
 import org.terasology.logic.console.commandSystem.annotations.Command;
 import org.terasology.logic.console.commandSystem.annotations.CommandParam;
@@ -78,21 +79,11 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
     }
 
     @ReceiveEvent
-    public void onPlayerRespawn(OnPlayerSpawnedEvent event, EntityRef player,
-                                HungerComponent hunger) {
+    public void onPlayerSpawn(OnPlayerSpawnedEvent event, EntityRef player,
+                              HungerComponent hunger) {
         hunger.lastCalculatedFood = hunger.maxFoodCapacity;
         hunger.lastCalculationTime = time.getGameTimeInMs();
         player.saveComponent(hunger);
-    }
-
-    @ReceiveEvent
-    public void onPlayerFirstSpawn(OnPlayerSpawnedEvent event, EntityRef player) {
-        if (!player.hasComponent(HungerComponent.class)) {
-            HungerComponent hunger = new HungerComponent();
-            hunger.lastCalculatedFood = hunger.maxFoodCapacity;
-            hunger.lastCalculationTime = time.getGameTimeInMs();
-            player.addComponent(hunger);
-        }
     }
 
     @ReceiveEvent
@@ -111,6 +102,8 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
             hunger.lastCalculatedFood = Math.min(hunger.maxFoodCapacity, HungerAndThirstUtils.getHungerForEntity(instigator) + filling);
             hunger.lastCalculationTime = time.getGameTimeInMs();
             instigator.saveComponent(hunger);
+            item.send(new FoodConsumedEvent());
+            event.consume();
         }
     }
 
