@@ -16,22 +16,29 @@
 package org.terasology.hunger.ui;
 
 import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.hunger.HungerAndThirstUtils;
+import org.terasology.hunger.HungerUtils;
 import org.terasology.hunger.component.HungerComponent;
-import org.terasology.hunger.component.ThirstComponent;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.registry.CoreRegistry;
 import org.terasology.rendering.nui.databinding.Binding;
+import org.terasology.rendering.nui.databinding.ReadOnlyBinding;
 import org.terasology.rendering.nui.layers.hud.CoreHudWidget;
 import org.terasology.rendering.nui.widgets.UILoadBar;
 
 /**
  * @author Marcin Sciesinski <marcins78@gmail.com>
  */
-public class HungerAndThirstWindow extends CoreHudWidget {
+public class HungerWindow extends CoreHudWidget {
     @Override
     public void initialise() {
         UILoadBar hunger = find("hunger", UILoadBar.class);
+        hunger.bindVisible(new ReadOnlyBinding<Boolean>() {
+            @Override
+            public Boolean get() {
+                EntityRef character = CoreRegistry.get(LocalPlayer.class).getCharacterEntity();
+                return character != null && character.hasComponent(HungerComponent.class);
+            }
+        });
         hunger.bindValue(
                 new Binding<Float>() {
                     @Override
@@ -42,26 +49,7 @@ public class HungerAndThirstWindow extends CoreHudWidget {
                         }
 
                         HungerComponent hunger = character.getComponent(HungerComponent.class);
-                        return HungerAndThirstUtils.getHungerForEntity(character) / hunger.maxFoodCapacity;
-                    }
-
-                    @Override
-                    public void set(Float value) {
-                    }
-                });
-
-        UILoadBar thirst = find("thirst", UILoadBar.class);
-        thirst.bindValue(
-                new Binding<Float>() {
-                    @Override
-                    public Float get() {
-                        EntityRef character = CoreRegistry.get(LocalPlayer.class).getCharacterEntity();
-                        if (character == null || !character.hasComponent(ThirstComponent.class)) {
-                            return 0.0f;
-                        }
-
-                        ThirstComponent thirst = character.getComponent(ThirstComponent.class);
-                        return HungerAndThirstUtils.getThirstForEntity(character) / thirst.maxWaterCapacity;
+                        return HungerUtils.getHungerForEntity(character) / hunger.maxFoodCapacity;
                     }
 
                     @Override

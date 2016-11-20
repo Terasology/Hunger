@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 MovingBlocks
+ * Copyright 2016 MovingBlocks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.hunger.component;
+package org.terasology.hunger.event;
 
-import org.terasology.entitySystem.Component;
+import org.terasology.entitySystem.event.Event;
 
-public class DrinkComponent implements Component {
-    public float filling;
+public class FoodConsumedEvent implements Event {
 }

@@ -18,14 +18,13 @@ package org.terasology.hunger;
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.hunger.component.HungerComponent;
-import org.terasology.hunger.component.ThirstComponent;
 import org.terasology.registry.CoreRegistry;
 
 /**
  * @author Marcin Sciesinski <marcins78@gmail.com>
  */
-public final class HungerAndThirstUtils {
-    private HungerAndThirstUtils() {
+public final class HungerUtils {
+    private HungerUtils() {
     }
 
     public static float getHungerForEntity(EntityRef entity) {
@@ -37,16 +36,5 @@ public final class HungerAndThirstUtils {
         long gameTime = CoreRegistry.get(Time.class).getGameTimeInMs();
         float foodDecay = hunger.foodDecayPerSecond * (gameTime - hunger.lastCalculationTime) / 1000f;
         return Math.max(0, hunger.lastCalculatedFood - foodDecay);
-    }
-
-    public static float getThirstForEntity(EntityRef entity) {
-        ThirstComponent thirst = entity.getComponent(ThirstComponent.class);
-        if (thirst == null) {
-            return 0;
-        }
-
-        long gameTime = CoreRegistry.get(Time.class).getGameTimeInMs();
-        float waterDecay = thirst.waterDecayPerSecond * (gameTime - thirst.lastCalculationTime) / 1000f;
-        return Math.max(0, thirst.lastCalculatedWater - waterDecay);
     }
 }
