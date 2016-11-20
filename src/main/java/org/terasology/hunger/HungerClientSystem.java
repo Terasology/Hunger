@@ -25,12 +25,12 @@ import org.terasology.rendering.nui.NUIManager;
  * @author Marcin Sciesinski <marcins78@gmail.com>
  */
 @RegisterSystem(RegisterMode.CLIENT)
-public class HungerAndThirstClientSystem extends BaseComponentSystem {
+public class HungerClientSystem extends BaseComponentSystem {
     @In
     private NUIManager nuiManager;
 
     @Override
     public void preBegin() {
-        nuiManager.getHUD().addHUDElement("Hunger:HungerAndThirst");
+        nuiManager.getHUD().addHUDElement("Hunger:Hunger");
     }
 }

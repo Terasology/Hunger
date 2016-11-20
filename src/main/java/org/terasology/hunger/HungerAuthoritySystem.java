@@ -60,7 +60,7 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
             HungerComponent hunger = entity.getComponent(HungerComponent.class);
 
             //Check to see if health should be decreased
-            if (HungerAndThirstUtils.getHungerForEntity(entity) < hunger.healthLossThreshold) {
+            if (HungerUtils.getHungerForEntity(entity) < hunger.healthLossThreshold) {
                 if (gameTime >= hunger.nextHealthDecreaseTick) {
                     entity.send(new DoDamageEvent(hunger.healthDecreaseAmount));
                     hunger.nextHealthDecreaseTick = gameTime + hunger.healthDecreaseInterval;
@@ -73,7 +73,7 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
     public void onHealthRegen(BeforeHealEvent event, EntityRef entity,
                               HungerComponent hunger) {
         if (event.getInstigator() == entity
-                && HungerAndThirstUtils.getHungerForEntity(entity) < hunger.healthStopRegenThreshold) {
+                && HungerUtils.getHungerForEntity(entity) < hunger.healthStopRegenThreshold) {
             event.consume();
         }
     }
@@ -88,7 +88,7 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
 
     @ReceiveEvent
     public void beforeRemoval(BeforeDeactivateComponent event, EntityRef entity, HungerComponent hunger) {
-        hunger.lastCalculatedFood = HungerAndThirstUtils.getHungerForEntity(entity);
+        hunger.lastCalculatedFood = HungerUtils.getHungerForEntity(entity);
         hunger.lastCalculationTime = time.getGameTimeInMs();
         entity.saveComponent(hunger);
     }
@@ -99,7 +99,7 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
         EntityRef instigator = event.getInstigator();
         HungerComponent hunger = instigator.getComponent(HungerComponent.class);
         if (hunger != null) {
-            hunger.lastCalculatedFood = Math.min(hunger.maxFoodCapacity, HungerAndThirstUtils.getHungerForEntity(instigator) + filling);
+            hunger.lastCalculatedFood = Math.min(hunger.maxFoodCapacity, HungerUtils.getHungerForEntity(instigator) + filling);
             hunger.lastCalculationTime = time.getGameTimeInMs();
             instigator.saveComponent(hunger);
             item.send(new FoodConsumedEvent());
@@ -120,7 +120,7 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
         EntityRef character = client.getComponent(ClientComponent.class).character;
         if (character.hasComponent(HungerComponent.class)) {
             HungerComponent hunger = character.getComponent(HungerComponent.class);
-            return "Current Food Level: " + HungerAndThirstUtils.getHungerForEntity(character) + "/" + hunger.maxFoodCapacity;
+            return "Current Food Level: " + HungerUtils.getHungerForEntity(character) + "/" + hunger.maxFoodCapacity;
         } else {
             return "You don't have a hunger level.";
         }
