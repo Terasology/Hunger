@@ -41,18 +41,29 @@ import org.terasology.registry.In;
 
 /**
  * @author UltimateBudgie <TheUltimateBudgie@gmail.com>
+ * The class monitoring player hunger levels, related events and commands.
  */
 
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class HungerAuthoritySystem extends BaseComponentSystem implements UpdateSubscriberSystem {
+    /**
+     * The logger for debugging to the log files. =
+     */
     private static final Logger logger = LoggerFactory.getLogger(HungerAuthoritySystem.class);
 
+    /** Reference to the EntityManager, used for getting all entities who are affected by hunger. */
     @In
     private EntityManager entityManager;
 
+    /** Reference to the current time, used for calculating if the food of an entity has to be decreased.*/
     @In
     private Time time;
 
+    /**
+     * Get's the hunger of all entities available and checks for each one of those if their hunger is below the threshold of losing health.
+     * If that's the case the player will lose health.
+     * @param delta - Unused parameter.
+     */
     @Override
     public void update(float delta) {
         long gameTime = time.getGameTimeInMs();
@@ -69,6 +80,12 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
         }
     }
 
+    /**
+     * Cancels health regen for an entity if their hunger is below the threshold for healing health.
+     * @param event The BeforeHealEvent, called before an entity is about to be healed.
+     * @param entity The entity which is being healed.
+     * @param hunger The HungerComponent object, containing settings for Hunger.
+     */
     @ReceiveEvent
     public void onHealthRegen(BeforeHealEvent event, EntityRef entity,
                               HungerComponent hunger) {
@@ -78,6 +95,12 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
         }
     }
 
+    /**
+     * Set's the players hunger to a maximum when spawning. Set's the last calculation time to the current game time.
+     * @param event The OnPlayerSpawnedEvent, called when a player is spawning into the world.
+     * @param player The player which is being spawned.
+     * @param hunger The HungerComponent object, containing settings for Hunger.
+     */
     @ReceiveEvent
     public void onPlayerSpawn(OnPlayerSpawnedEvent event, EntityRef player,
                               HungerComponent hunger) {
@@ -86,6 +109,12 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
         player.saveComponent(hunger);
     }
 
+    /**
+     * Saves data for a component before it's being deactivated.
+     * @param event - The BeforeDeactivateComponent Event, called when a hungercomponent is about to leave the active state.
+     * @param entity - The Entity whose hungercomponent is about to leave the active state.
+     * @param hunger - The HungerComponent which isa bout to leave it's active state.
+     */
     @ReceiveEvent
     public void beforeRemoval(BeforeDeactivateComponent event, EntityRef entity, HungerComponent hunger) {
         hunger.lastCalculatedFood = HungerUtils.getHungerForEntity(entity);
@@ -93,6 +122,12 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
         entity.saveComponent(hunger);
     }
 
+    /**
+     * This method registers it when an entity consumes food and adds the food to the entities HungerComponent.
+     * @param event The ActivateEvent called when an entity consumes food.
+     * @param item The entity which is consuming the food.
+     * @param food The Foodcomponent containing data about how much a certain type of food is filling.
+     */
     @ReceiveEvent
     public void foodConsumed(ActivateEvent event, EntityRef item, FoodComponent food) {
         float filling = food.filling;
@@ -107,6 +142,10 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
         }
     }
 
+    /**
+     * Tests the character ID and content of all components for an Entity.
+     * @param client
+     */
     @Command(shortDescription = "Temp testing command", runOnServer = true)
     public void test(EntityRef client) {
         logger.info("ID:" + client.getComponent(ClientComponent.class).character.getId());
@@ -115,6 +154,11 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
         }
     }
 
+    /**
+     * A command for testing the hunger level for an entity.
+     * @param client The entity who is checking it's hunger level.
+     * @return Returns a message for the client informing them about their food level if they have one.
+     */
     @Command(shortDescription = "Checks your hunger/food level.", runOnServer = true)
     public String hungerCheck(EntityRef client) {
         EntityRef character = client.getComponent(ClientComponent.class).character;
@@ -126,6 +170,12 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
         }
     }
 
+    /**
+     * A command for modifying your hunger level. This has to be above 0 and below the max food capacity.
+     * @param newFood The new hunger level for the client.
+     * @param client The client which is changing it's hunger level.
+     * @return Returns a message for the client telling him about their new hunger level if they have one.
+     */
     @Command(shortDescription = "Sets your current hunger level.", runOnServer = true)
     public String hungerSet(@CommandParam(value = "FoodLevel") float newFood, EntityRef client) {
         EntityRef character = client.getComponent(ClientComponent.class).character;
@@ -151,6 +201,12 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
         return "Food level successfully set to: " + newFood;
     }
 
+    /**
+     * A command for changing your maximum food level. Has to be above 0.
+     * @param newMax The new maximum food level.
+     * @param client The client which is changing it's food level.
+     * @return Returns a message for the client telling him wether the command was succesful.
+     */
     @Command(shortDescription = "Sets your max food level.", runOnServer = true)
     public String hungerSetMax(@CommandParam(value = "MaxFoodLevel") float newMax, EntityRef client) {
         EntityRef character = client.getComponent(ClientComponent.class).character;
@@ -167,4 +223,5 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
         character.saveComponent(hunger);
         return "Max Food Level successfully set to: " + newMax;
     }
+
 }
