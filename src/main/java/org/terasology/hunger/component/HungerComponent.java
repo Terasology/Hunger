@@ -18,9 +18,6 @@ package org.terasology.hunger.component;
 import org.terasology.entitySystem.Component;
 import org.terasology.network.Replicate;
 
-/**
- * @author UltimateBudgie <TheUltimateBudgie@gmail.com>
- */
 public class HungerComponent implements Component {
     //General Hunger Settings
     /**
@@ -30,9 +27,15 @@ public class HungerComponent implements Component {
     @Replicate
     public float maxFoodCapacity = 100;
 
+    /**
+     * The food level of an entity after the last calculation.
+     */
     @Replicate
     public float lastCalculatedFood;
 
+    /**
+     * The ingame time in MS when the last food level calculation happened.
+     */
     @Replicate
     public long lastCalculationTime;
 
@@ -68,6 +71,10 @@ public class HungerComponent implements Component {
     @Replicate
     public int healthDecreaseInterval = 30000;
 
+    /**
+     * The next tick where an entity's health has to be decreased due to a too low hunger level.
+     */
     @Replicate
     public long nextHealthDecreaseTick;
+
 }

@@ -20,13 +20,15 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.hunger.component.HungerComponent;
 import org.terasology.registry.CoreRegistry;
 
-/**
- * @author Marcin Sciesinski <marcins78@gmail.com>
- */
 public final class HungerUtils {
     private HungerUtils() {
     }
 
+    /**
+     * Get the current hunger level for an entity.
+     * @param entity - The entity who's health you want to receive.
+     * @return The hunger of an entity as a float.
+     */
     public static float getHungerForEntity(EntityRef entity) {
         HungerComponent hunger = entity.getComponent(HungerComponent.class);
         if (hunger == null) {
@@ -37,4 +39,5 @@ public final class HungerUtils {
         float foodDecay = hunger.foodDecayPerSecond * (gameTime - hunger.lastCalculationTime) / 1000f;
         return Math.max(0, hunger.lastCalculatedFood - foodDecay);
     }
+
 }

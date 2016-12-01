@@ -21,14 +21,12 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.registry.In;
 import org.terasology.rendering.nui.NUIManager;
 
-/**
- * @author Marcin Sciesinski <marcins78@gmail.com>
- */
 @RegisterSystem(RegisterMode.CLIENT)
 public class HungerClientSystem extends BaseComponentSystem {
     @In
     private NUIManager nuiManager;
 
+    /** Adds the hunger bar to the player's HUD. */
     @Override
     public void preBegin() {
         nuiManager.getHUD().addHUDElement("Hunger:Hunger");
