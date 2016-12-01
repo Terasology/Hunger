@@ -20,10 +20,6 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.hunger.component.HungerComponent;
 import org.terasology.registry.CoreRegistry;
 
-/**
- * @author Marcin Sciesinski <marcins78@gmail.com>
- * A Utility class for retreiving the current hunger of an entity.
- */
 public final class HungerUtils {
     private HungerUtils() {
     }

@@ -17,9 +17,6 @@ package org.terasology.hunger.component;
 
 import org.terasology.entitySystem.Component;
 
-/**
- * @author Marcin Sciesinski <marcins78@gmail.com>
- */
 public class FoodComponent implements Component {
     /**
      * The amount of hunger this food restores when used.

@@ -40,15 +40,11 @@ import org.terasology.network.ClientComponent;
 import org.terasology.registry.In;
 
 /**
- * @author UltimateBudgie <TheUltimateBudgie@gmail.com>
- * The class monitoring player hunger levels, related events and commands.
+ * The authority system monitoring player hunger levels, related events and commands.
  */
-
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class HungerAuthoritySystem extends BaseComponentSystem implements UpdateSubscriberSystem {
-    /**
-     * The logger for debugging to the log files. =
-     */
+    /** The logger for debugging to the log files. */
     private static final Logger logger = LoggerFactory.getLogger(HungerAuthoritySystem.class);
 
     /** Reference to the EntityManager, used for getting all entities who are affected by hunger. */
@@ -60,8 +56,7 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
     private Time time;
 
     /**
-     * Get's the hunger of all entities available and checks for each one of those if their hunger is below the threshold of losing health.
-     * If that's the case the player will lose health.
+     * Chekcs the HungerComponent for all entities and triggers DamageEvents if their hunger level is below the threshold.
      * @param delta - Unused parameter.
      */
     @Override
@@ -81,7 +76,7 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
     }
 
     /**
-     * Cancels health regen for an entity if their hunger is below the threshold for healing health.
+     * Cancels the BeforeHealEvent for an entity if their hunger level is lower than the health regen threshold.
      * @param event The BeforeHealEvent, called before an entity is about to be healed.
      * @param entity The entity which is being healed.
      * @param hunger The HungerComponent object, containing settings for Hunger.
@@ -110,7 +105,7 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
     }
 
     /**
-     * Saves data for a component before it's being deactivated.
+     * Saves data for an entity's HungerComponent before it is being deactivated.
      * @param event - The BeforeDeactivateComponent Event, called when a hungercomponent is about to leave the active state.
      * @param entity - The Entity whose hungercomponent is about to leave the active state.
      * @param hunger - The HungerComponent which isa bout to leave it's active state.
@@ -171,8 +166,8 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
     }
 
     /**
-     * A command for modifying your hunger level. This has to be above 0 and below the max food capacity.
-     * @param newFood The new hunger level for the client.
+     * A command for modifying your hunger level.
+     * @param newFood The new hunger level for the client. This has to be above 0 and below the max food capacity.
      * @param client The client which is changing it's hunger level.
      * @return Returns a message for the client telling him about their new hunger level if they have one.
      */
@@ -202,8 +197,8 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
     }
 
     /**
-     * A command for changing your maximum food level. Has to be above 0.
-     * @param newMax The new maximum food level.
+     * A command for changing your maximum food level.
+     * @param newMax The new maximum food level. Has to be above 0.
      * @param client The client which is changing it's food level.
      * @return Returns a message for the client telling him wether the command was succesful.
      */

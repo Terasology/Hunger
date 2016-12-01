@@ -25,13 +25,9 @@ import org.terasology.rendering.nui.databinding.ReadOnlyBinding;
 import org.terasology.rendering.nui.layers.hud.CoreHudWidget;
 import org.terasology.rendering.nui.widgets.UILoadBar;
 
-/**
- * @author Marcin Sciesinski <marcins78@gmail.com>
- */
+
 public class HungerWindow extends CoreHudWidget {
-    /**
-     * This method initialises the hunger bar UI for a player and updates it based on current hunger.
-     */
+    /** This method initialises the hunger bar UI for a player and updates it based on current hunger. */
     @Override
     public void initialise() {
         UILoadBar hunger = find("hunger", UILoadBar.class);

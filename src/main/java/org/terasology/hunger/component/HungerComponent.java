@@ -18,9 +18,6 @@ package org.terasology.hunger.component;
 import org.terasology.entitySystem.Component;
 import org.terasology.network.Replicate;
 
-/**
- * @author UltimateBudgie <TheUltimateBudgie@gmail.com>
- */
 public class HungerComponent implements Component {
     //General Hunger Settings
     /**
