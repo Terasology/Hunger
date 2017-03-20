@@ -15,7 +15,24 @@
  */
 package org.terasology.hunger.event;
 
+import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
+import org.terasology.logic.common.ActivateEvent;
 
 public class FoodConsumedEvent implements Event {
+    private EntityRef instigator;
+    private EntityRef target;
+
+    public FoodConsumedEvent(ActivateEvent event) {
+        this.instigator = event.getInstigator();
+        this.target = event.getTarget();
+    }
+
+    public EntityRef getInstigator() {
+        return instigator;
+    }
+
+    public EntityRef getTarget() {
+        return target;
+    }
 }

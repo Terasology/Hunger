@@ -22,6 +22,7 @@ import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.entity.lifecycleEvents.BeforeDeactivateComponent;
+import org.terasology.entitySystem.event.EventPriority;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
@@ -36,6 +37,9 @@ import org.terasology.logic.console.commandSystem.annotations.CommandParam;
 import org.terasology.logic.console.commandSystem.annotations.Sender;
 import org.terasology.logic.health.BeforeHealEvent;
 import org.terasology.logic.health.DoDamageEvent;
+import org.terasology.logic.inventory.InventoryManager;
+import org.terasology.logic.inventory.InventoryUtils;
+import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.logic.players.event.OnPlayerSpawnedEvent;
 import org.terasology.network.ClientComponent;
 import org.terasology.registry.In;
@@ -51,6 +55,10 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
     /** Reference to the EntityManager, used for getting all entities who are affected by hunger. */
     @In
     private EntityManager entityManager;
+
+    /** Reference to the InventoryManager, used for removing consumed items from inventory. */
+    @In
+    private InventoryManager inventoryManager;
 
     /** Reference to the current time, used for calculating if the food of an entity has to be decreased.*/
     @In
@@ -133,8 +141,17 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
             hunger.lastCalculatedFood = Math.min(hunger.maxFoodCapacity, HungerUtils.getHungerForEntity(instigator) + filling);
             hunger.lastCalculationTime = time.getGameTimeInMs();
             instigator.saveComponent(hunger);
-            item.send(new FoodConsumedEvent());
+            item.send(new FoodConsumedEvent(event));
             event.consume();
+        }
+    }
+
+    @ReceiveEvent(components = ItemComponent.class, priority = EventPriority.PRIORITY_TRIVIAL)
+    public void usedItem(FoodConsumedEvent event, EntityRef item) {
+        ItemComponent itemComp = item.getComponent(ItemComponent.class);
+        if (itemComp.consumedOnUse) {
+            int slot = InventoryUtils.getSlotWithItem(event.getInstigator(), item);
+            inventoryManager.removeItem(event.getInstigator(), event.getInstigator(), slot, true, 1);
         }
     }
 
