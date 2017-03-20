@@ -146,6 +146,11 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
         }
     }
 
+    /**
+     * This method deals with removal of food item after it is consumed.
+     * @param event The FoodConsumedEvent called when an entity consumes food.
+     * @param item The entity which is consuming the food.
+     */
     @ReceiveEvent(components = ItemComponent.class, priority = EventPriority.PRIORITY_TRIVIAL)
     public void usedItem(FoodConsumedEvent event, EntityRef item) {
         ItemComponent itemComp = item.getComponent(ItemComponent.class);

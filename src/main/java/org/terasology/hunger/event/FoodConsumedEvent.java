@@ -19,6 +19,7 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 import org.terasology.logic.common.ActivateEvent;
 
+/** This event is triggered after the Activate event has been consumed upon eating of a food item */
 public class FoodConsumedEvent implements Event {
     private EntityRef instigator;
     private EntityRef target;
