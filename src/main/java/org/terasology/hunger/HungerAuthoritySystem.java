@@ -142,7 +142,10 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
             hunger.lastCalculationTime = time.getGameTimeInMs();
             instigator.saveComponent(hunger);
             item.send(new FoodConsumedEvent(event));
-            event.consume();
+
+            if (!item.exists()) {
+                event.consume();
+            }
         }
     }
 
@@ -156,7 +159,14 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
         ItemComponent itemComp = item.getComponent(ItemComponent.class);
         if (itemComp.consumedOnUse) {
             int slot = InventoryUtils.getSlotWithItem(event.getInstigator(), item);
-            inventoryManager.removeItem(event.getInstigator(), event.getInstigator(), slot, true, 1);
+            boolean destroyDrink = false;
+
+            if (itemComp.baseDamage != Integer.MIN_VALUE) {
+                itemComp.baseDamage = Integer.MIN_VALUE;
+            } else {
+                destroyDrink = true;
+                inventoryManager.removeItem(event.getInstigator(), event.getInstigator(), slot, destroyDrink, 1);
+            }
         }
     }
 }
