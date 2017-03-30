@@ -64,6 +64,8 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
     @In
     private Time time;
 
+    private boolean destroyDrink = false;
+
     /**
      * Chekcs the HungerComponent for all entities and triggers DamageEvents if their hunger level is below the threshold.
      * @param delta - Unused parameter.
@@ -143,8 +145,9 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
             instigator.saveComponent(hunger);
             item.send(new FoodConsumedEvent(event));
 
-            if (!item.exists()) {
+            if (destroyDrink) {
                 event.consume();
+                destroyDrink = false;
             }
         }
     }
@@ -159,13 +162,13 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
         ItemComponent itemComp = item.getComponent(ItemComponent.class);
         if (itemComp.consumedOnUse) {
             int slot = InventoryUtils.getSlotWithItem(event.getInstigator(), item);
-            boolean destroyDrink = false;
+            destroyDrink = false;
 
             if (itemComp.baseDamage != Integer.MIN_VALUE) {
                 itemComp.baseDamage = Integer.MIN_VALUE;
             } else {
                 destroyDrink = true;
-                inventoryManager.removeItem(event.getInstigator(), event.getInstigator(), slot, destroyDrink, 1);
+                itemComp.baseDamage = 1;
             }
         }
     }
