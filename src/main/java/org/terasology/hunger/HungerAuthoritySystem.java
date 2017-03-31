@@ -169,6 +169,7 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
             } else {
                 destroyDrink = true;
                 itemComp.baseDamage = 1;
+                inventoryManager.removeItem(event.getInstigator(), event.getInstigator(), item, true, 1);
             }
         }
     }
