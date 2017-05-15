@@ -24,6 +24,8 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.entity.lifecycleEvents.BeforeDeactivateComponent;
 import org.terasology.entitySystem.event.EventPriority;
 import org.terasology.entitySystem.event.ReceiveEvent;
+import org.terasology.entitySystem.prefab.Prefab;
+import org.terasology.entitySystem.prefab.PrefabManager;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
@@ -60,6 +62,10 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
     @In
     private InventoryManager inventoryManager;
 
+    /** Reference to the PrefabManager, used for getting damageType prefab. */
+    @In
+    private PrefabManager prefabManager;
+
     /** Reference to the current time, used for calculating if the food of an entity has to be decreased.*/
     @In
     private Time time;
@@ -79,7 +85,8 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
             //Check to see if health should be decreased
             if (HungerUtils.getHungerForEntity(entity) < hunger.healthLossThreshold) {
                 if (gameTime >= hunger.nextHealthDecreaseTick) {
-                    entity.send(new DoDamageEvent(hunger.healthDecreaseAmount));
+                    Prefab starvationDamagePrefab = prefabManager.getPrefab("hunger:starvationDamage");
+                    entity.send(new DoDamageEvent(hunger.healthDecreaseAmount, starvationDamagePrefab));
                     hunger.nextHealthDecreaseTick = gameTime + hunger.healthDecreaseInterval;
                 }
             }
