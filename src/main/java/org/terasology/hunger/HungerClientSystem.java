@@ -26,6 +26,7 @@ import org.terasology.hunger.component.HungerComponent;
 import org.terasology.logic.console.commandSystem.annotations.Command;
 import org.terasology.logic.console.commandSystem.annotations.CommandParam;
 import org.terasology.logic.console.commandSystem.annotations.Sender;
+import org.terasology.logic.permission.PermissionManager;
 import org.terasology.network.ClientComponent;
 import org.terasology.registry.In;
 import org.terasology.rendering.nui.NUIManager;
@@ -55,7 +56,7 @@ public class HungerClientSystem extends BaseComponentSystem {
      * @param client The entity who is checking it's hunger level.
      * @return Returns a message for the client informing them about their food level if they have one.
      */
-    @Command(shortDescription = "Checks your hunger/food level.", runOnServer = true)
+    @Command(shortDescription = "Checks your hunger/food level.", runOnServer = true, requiredPermission = PermissionManager.CHEAT_PERMISSION)
     public String hungerCheck(@Sender EntityRef client) {
         EntityRef character = client.getComponent(ClientComponent.class).character;
         if (character.hasComponent(HungerComponent.class)) {
@@ -72,7 +73,7 @@ public class HungerClientSystem extends BaseComponentSystem {
      * @param client The client which is changing it's hunger level.
      * @return Returns a message for the client telling him about their new hunger level if they have one.
      */
-    @Command(shortDescription = "Sets your current hunger level.", runOnServer = true)
+    @Command(shortDescription = "Sets your current hunger level.", runOnServer = true, requiredPermission = PermissionManager.CHEAT_PERMISSION)
     public String hungerSet(@CommandParam(value = "FoodLevel") float newFood, @Sender EntityRef client) {
         EntityRef character = client.getComponent(ClientComponent.class).character;
         if (!character.hasComponent(HungerComponent.class)) {
@@ -103,7 +104,7 @@ public class HungerClientSystem extends BaseComponentSystem {
      * @param client The client which is changing it's food level.
      * @return Returns a message for the client telling him wether the command was succesful.
      */
-    @Command(shortDescription = "Sets your max food level.", runOnServer = true)
+    @Command(shortDescription = "Sets your max food level.", runOnServer = true, requiredPermission = PermissionManager.CHEAT_PERMISSION)
     public String hungerSetMax(@CommandParam(value = "MaxFoodLevel") float newMax, @Sender EntityRef client) {
         EntityRef character = client.getComponent(ClientComponent.class).character;
         if (!character.hasComponent(HungerComponent.class)) {
