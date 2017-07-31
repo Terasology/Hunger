@@ -156,20 +156,6 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
     }
 
     /**
-     * Saves data for an entity's HungerComponent before it is being deactivated.
-     *
-     * @param event  - The BeforeDeactivateComponent Event, called when a hungercomponent is about to leave the active state.
-     * @param entity - The Entity whose hungercomponent is about to leave the active state.
-     * @param hunger - The HungerComponent which isa bout to leave it's active state.
-     */
-    @ReceiveEvent
-    public void beforeRemoval(BeforeDeactivateComponent event, EntityRef entity, HungerComponent hunger) {
-        hunger.lastCalculatedFood = HungerUtils.getHungerForEntity(entity);
-        hunger.lastCalculationTime = time.getGameTimeInMs();
-        entity.saveComponent(hunger);
-    }
-
-    /**
      * This method registers it when an entity consumes food and adds the food to the entities HungerComponent.
      *
      * @param event The ActivateEvent called when an entity consumes food.
