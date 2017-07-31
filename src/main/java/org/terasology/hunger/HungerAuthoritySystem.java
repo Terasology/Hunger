@@ -71,9 +71,7 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
     @In
     private PrefabManager prefabManager;
 
-    /**
-     * Reference to the current time, used for calculating if the food of an entity has to be decreased.
-     */
+    /** Reference to the current time, used for calculating if the food of an entity has to be decreased.*/
     @In
     private Time time;
 
@@ -166,10 +164,9 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
 
     /**
      * This method registers it when an entity consumes food and adds the food to the entities HungerComponent.
-     *
      * @param event The ActivateEvent called when an entity consumes food.
-     * @param item  The entity which is consuming the food.
-     * @param food  The Foodcomponent containing data about how much a certain type of food is filling.
+     * @param item The entity which is consuming the food.
+     * @param food The Foodcomponent containing data about how much a certain type of food is filling.
      */
     @ReceiveEvent
     public void foodConsumed(ActivateEvent event, EntityRef item, FoodComponent food) {
@@ -191,9 +188,8 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
 
     /**
      * This method deals with removal of food item after it is consumed.
-     *
      * @param event The FoodConsumedEvent called when an entity consumes food.
-     * @param item  The entity which is consuming the food.
+     * @param item The entity which is consuming the food.
      */
     @ReceiveEvent(components = ItemComponent.class, priority = EventPriority.PRIORITY_TRIVIAL)
     public void usedItem(FoodConsumedEvent event, EntityRef item) {
