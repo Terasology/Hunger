@@ -26,6 +26,7 @@ public final class HungerUtils {
 
     /**
      * Get the current hunger level for an entity.
+     *
      * @param entity - The entity who's health you want to receive.
      * @return The hunger of an entity as a float.
      */
