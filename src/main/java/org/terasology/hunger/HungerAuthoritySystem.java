@@ -28,7 +28,6 @@ import org.terasology.entitySystem.prefab.PrefabManager;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.entitySystem.systems.UpdateSubscriberSystem;
 import org.terasology.hunger.component.FoodComponent;
 import org.terasology.hunger.component.HungerComponent;
 import org.terasology.hunger.event.FoodConsumedEvent;
@@ -37,6 +36,8 @@ import org.terasology.logic.common.ActivateEvent;
 import org.terasology.logic.console.commandSystem.annotations.Command;
 import org.terasology.logic.console.commandSystem.annotations.CommandParam;
 import org.terasology.logic.console.commandSystem.annotations.Sender;
+import org.terasology.logic.delay.DelayManager;
+import org.terasology.logic.delay.PeriodicActionTriggeredEvent;
 import org.terasology.logic.health.BeforeHealEvent;
 import org.terasology.logic.health.DoDamageEvent;
 import org.terasology.logic.inventory.InventoryManager;
@@ -47,12 +48,13 @@ import org.terasology.logic.players.event.OnPlayerRespawnedEvent;
 import org.terasology.logic.players.event.OnPlayerSpawnedEvent;
 import org.terasology.network.ClientComponent;
 import org.terasology.registry.In;
+import org.terasology.world.WorldComponent;
 
 /**
  * The authority system monitoring player hunger levels, related events and commands.
  */
 @RegisterSystem(RegisterMode.AUTHORITY)
-public class HungerAuthoritySystem extends BaseComponentSystem implements UpdateSubscriberSystem {
+public class HungerAuthoritySystem extends BaseComponentSystem {
     /**
      * The logger for debugging to the log files.
      */
@@ -82,26 +84,40 @@ public class HungerAuthoritySystem extends BaseComponentSystem implements Update
     @In
     private Time time;
 
+    /**
+     * Reference to DelayManager, used for addPeriodicAction.
+     */
+    @In
+    private DelayManager delayManager;
+    /**
+     * The interval (in milliseconds) at which healthDecreaseAmount (above) is applied to the component.
+     */
+    public int healthDecreaseInterval = 30000;
+
+    public static final String HUNGER_DAMAGE_ACTION_ID = "Hunger Damage";
     private boolean destroyDrink = false;
 
-    /**
-     * Checks the HungerComponent for all entities and triggers DamageEvents if their hunger level is below the threshold.
-     *
-     * @param delta - Unused parameter.
-     */
-    @Override
-    public void update(float delta) {
-        long gameTime = time.getGameTimeInMs();
-        for (EntityRef entity : entityManager.getEntitiesWith(HungerComponent.class, AliveCharacterComponent.class)) {
-            HungerComponent hunger = entity.getComponent(HungerComponent.class);
+    public void postBegin(){
+        for(EntityRef entity : entityManager.getEntitiesWith(WorldComponent.class)){
+            delayManager.addPeriodicAction(entity, HUNGER_DAMAGE_ACTION_ID, 0, healthDecreaseInterval);
+        }
+    }
 
-            // Check to see if health should be decreased
-            if (HungerUtils.getHungerForEntity(entity) < hunger.healthLossThreshold) {
-                if (gameTime >= hunger.nextHealthDecreaseTick) {
-                    Prefab starvationDamagePrefab = prefabManager.getPrefab("hunger:starvationDamage");
-                    entity.send(new DoDamageEvent(hunger.healthDecreaseAmount, starvationDamagePrefab));
-                    hunger.nextHealthDecreaseTick = gameTime + hunger.healthDecreaseInterval;
-                    entity.saveComponent(hunger);
+    /**
+     * Deals a unit of hunger damage to the character.
+     */
+    @ReceiveEvent
+    public void onPeriodicActionTriggered(PeriodicActionTriggeredEvent event, EntityRef entity_unused) {
+        if (event.getActionId().equals(HUNGER_DAMAGE_ACTION_ID)) {
+            for (EntityRef entity : entityManager.getEntitiesWith(HungerComponent.class, AliveCharacterComponent.class)) {
+                HungerComponent hunger = entity.getComponent(HungerComponent.class);
+
+                // Check to see if health should be decreased
+                if (HungerUtils.getHungerForEntity(entity) < hunger.healthLossThreshold) {
+                        Prefab starvationDamagePrefab = prefabManager.getPrefab("hunger:starvationDamage");
+                        entity.send(new DoDamageEvent(hunger.healthDecreaseAmount, starvationDamagePrefab));
+                        entity.saveComponent(hunger);
+                        logger.info("Health decreased");
                 }
             }
         }

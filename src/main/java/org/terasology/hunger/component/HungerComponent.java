@@ -65,16 +65,4 @@ public class HungerComponent implements Component {
     @Replicate
     public int healthDecreaseAmount = 15;
 
-    /**
-     * The interval (in milliseconds) at which healthDecreaseAmount (above) is applied to the component
-     */
-    @Replicate
-    public int healthDecreaseInterval = 30000;
-
-    /**
-     * The next tick where an entity's health has to be decreased due to a too low hunger level.
-     */
-    @Replicate
-    public long nextHealthDecreaseTick;
-
 }
