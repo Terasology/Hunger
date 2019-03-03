@@ -98,8 +98,15 @@ public class HungerAuthoritySystem extends BaseComponentSystem {
     private boolean destroyDrink = false;
 
     public void postBegin(){
-        for(EntityRef entity : entityManager.getEntitiesWith(WorldComponent.class)){
-            delayManager.addPeriodicAction(entity, HUNGER_DAMAGE_ACTION_ID, 0, healthDecreaseInterval);
+        boolean processedOnce = false;
+        for(EntityRef entity : entityManager.getEntitiesWith(WorldComponent.class)) {
+            if (!processedOnce) {
+                delayManager.addPeriodicAction(entity, HUNGER_DAMAGE_ACTION_ID, 0, healthDecreaseInterval);
+                processedOnce = true;
+            }
+            else{
+                logger.warn("More than one entity with WorldComponent found");
+            }
         }
     }
 
@@ -117,7 +124,6 @@ public class HungerAuthoritySystem extends BaseComponentSystem {
                         Prefab starvationDamagePrefab = prefabManager.getPrefab("hunger:starvationDamage");
                         entity.send(new DoDamageEvent(hunger.healthDecreaseAmount, starvationDamagePrefab));
                         entity.saveComponent(hunger);
-                        logger.info("Health decreased");
                 }
             }
         }
