@@ -51,7 +51,7 @@ public class HungerComponent implements Component {
      * the entity to lose health.
      */
     @Replicate
-    public float healthLossThreshold = 1;
+    public float healthLossThreshold = 15;
 
     /**
      * The entity will stop regenerating health if their food capacity is < this threshold.

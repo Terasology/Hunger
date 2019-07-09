@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.entity.lifecycleEvents.BeforeDeactivateComponent;
 import org.terasology.entitySystem.event.EventPriority;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.prefab.Prefab;
@@ -33,22 +32,20 @@ import org.terasology.hunger.component.HungerComponent;
 import org.terasology.hunger.event.FoodConsumedEvent;
 import org.terasology.logic.characters.AliveCharacterComponent;
 import org.terasology.logic.common.ActivateEvent;
-import org.terasology.logic.console.commandSystem.annotations.Command;
-import org.terasology.logic.console.commandSystem.annotations.CommandParam;
-import org.terasology.logic.console.commandSystem.annotations.Sender;
 import org.terasology.logic.delay.DelayManager;
 import org.terasology.logic.delay.PeriodicActionTriggeredEvent;
-import org.terasology.logic.health.BeforeHealEvent;
-import org.terasology.logic.health.DoDamageEvent;
+import org.terasology.logic.health.event.ActivateRegenEvent;
+import org.terasology.logic.health.event.DeactivateRegenEvent;
+import org.terasology.logic.health.event.DoDamageEvent;
 import org.terasology.logic.inventory.InventoryManager;
 import org.terasology.logic.inventory.InventoryUtils;
 import org.terasology.logic.inventory.ItemComponent;
-import org.terasology.logic.permission.PermissionManager;
 import org.terasology.logic.players.event.OnPlayerRespawnedEvent;
 import org.terasology.logic.players.event.OnPlayerSpawnedEvent;
-import org.terasology.network.ClientComponent;
 import org.terasology.registry.In;
 import org.terasology.world.WorldComponent;
+
+import static org.terasology.logic.health.RegenAuthoritySystem.BASE_REGEN;
 
 /**
  * The authority system monitoring player hunger levels, related events and commands.
@@ -92,19 +89,18 @@ public class HungerAuthoritySystem extends BaseComponentSystem {
     /**
      * The interval (in milliseconds) at which healthDecreaseAmount (above) is applied to the component.
      */
-    public int healthDecreaseInterval = 30000;
+    public int healthDecreaseInterval = 3000;
 
     public static final String HUNGER_DAMAGE_ACTION_ID = "Hunger Damage";
     private boolean destroyDrink = false;
 
-    public void postBegin(){
+    public void postBegin() {
         boolean processedOnce = false;
-        for(EntityRef entity : entityManager.getEntitiesWith(WorldComponent.class)) {
+        for (EntityRef entity : entityManager.getEntitiesWith(WorldComponent.class)) {
             if (!processedOnce) {
                 delayManager.addPeriodicAction(entity, HUNGER_DAMAGE_ACTION_ID, 0, healthDecreaseInterval);
                 processedOnce = true;
-            }
-            else{
+            } else {
                 logger.warn("More than one entity with WorldComponent found");
             }
         }
@@ -114,16 +110,20 @@ public class HungerAuthoritySystem extends BaseComponentSystem {
      * Deals a unit of hunger damage to the character.
      */
     @ReceiveEvent
-    public void onPeriodicActionTriggered(PeriodicActionTriggeredEvent event, EntityRef entity_unused) {
+    public void onPeriodicActionTriggered(PeriodicActionTriggeredEvent event, EntityRef entityUnused) {
         if (event.getActionId().equals(HUNGER_DAMAGE_ACTION_ID)) {
             for (EntityRef entity : entityManager.getEntitiesWith(HungerComponent.class, AliveCharacterComponent.class)) {
                 HungerComponent hunger = entity.getComponent(HungerComponent.class);
+                hunger.lastCalculatedFood = Math.max(0,
+                        hunger.lastCalculatedFood - (healthDecreaseInterval * hunger.foodDecayPerSecond) / 1000);
+                hunger.lastCalculationTime = time.getGameTimeInMs();
+                entity.saveComponent(hunger);
 
                 // Check to see if health should be decreased
                 if (HungerUtils.getHungerForEntity(entity) < hunger.healthLossThreshold) {
-                        Prefab starvationDamagePrefab = prefabManager.getPrefab("hunger:starvationDamage");
-                        entity.send(new DoDamageEvent(hunger.healthDecreaseAmount, starvationDamagePrefab));
-                        entity.saveComponent(hunger);
+                    Prefab starvationDamagePrefab = prefabManager.getPrefab("hunger:starvationDamage");
+                    entity.send(new DoDamageEvent(hunger.healthDecreaseAmount, starvationDamagePrefab));
+                    entity.saveComponent(hunger);
                 }
             }
         }
@@ -137,11 +137,10 @@ public class HungerAuthoritySystem extends BaseComponentSystem {
      * @param hunger The HungerComponent object, containing settings for Hunger.
      */
     @ReceiveEvent
-    public void onHealthRegen(BeforeHealEvent event, EntityRef entity,
+    public void onHealthRegen(ActivateRegenEvent event, EntityRef entity,
                               HungerComponent hunger) {
-        if (event.getInstigator() == entity
-                && HungerUtils.getHungerForEntity(entity) < hunger.healthStopRegenThreshold) {
-            event.consume();
+        if (HungerUtils.getHungerForEntity(entity) < hunger.healthStopRegenThreshold && event.id.equals(BASE_REGEN)) {
+            entity.send(new DeactivateRegenEvent());
         }
     }
 
