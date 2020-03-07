@@ -5,6 +5,6 @@
     "displayName" : "Hunger and Food",
     "description" : "This module introduces Hunger and various related effects.",
     "dependencies" : [
-        {"id" : "Core", "minVersion" : "2.0.0"}
+        {"id" : "Core", "minVersion" : "3.0.0"}
     ]
 }
