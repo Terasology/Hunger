@@ -11,6 +11,6 @@ The player's hunger decreases as time in the world progresses, but replenishes w
 * As time progresses, you'll notice the hunger bar going down!
 
 ## Commands
-* `hungerCheck` - Displays your current food level
-* `hungerSet <float>` - Sets your current food level
-* `hungerSetMax` - Sets your maximum food level
+* `showHunger` - Displays your current food level
+* `setHunger <float>` - Sets your current food level
+* `setMaxHunger` - Sets your maximum food level
