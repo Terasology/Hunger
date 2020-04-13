@@ -3,7 +3,7 @@ A Terasology module, as the name implies, that features hunger in the form of a 
 
 ## Features
 A hunger status bar in the player's HUD, outlined in blue below:
-![](media/hud.PNG)
+![](media/hud.png)
 The player's hunger decreases as time in the world progresses, but replenishes with food and other consumables.
 
 ## Getting Started
