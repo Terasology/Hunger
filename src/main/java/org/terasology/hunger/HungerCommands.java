@@ -60,7 +60,7 @@ public class HungerCommands extends BaseComponentSystem {
      * @return Returns a message for the client telling him about their new hunger level if they have one.
      */
     @Command(shortDescription = "Sets your current hunger level.", runOnServer = true, requiredPermission = PermissionManager.CHEAT_PERMISSION)
-    public String setHunger(@CommandParam(value = "FoodLevel") float newFood, @Sender EntityRef client) {
+    public String setHunger(@Sender EntityRef client, @CommandParam(value = "FoodLevel") float newFood) {
         EntityRef character = client.getComponent(ClientComponent.class).character;
         if (!character.hasComponent(HungerComponent.class)) {
             return "You don't have a hunger level.";
