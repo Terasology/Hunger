@@ -4,6 +4,8 @@
     "author" : "UltimateBudgie, Marcin Sciesinski <marcins78@gmail.com>",
     "displayName" : "Hunger and Food",
     "description" : "This module introduces Hunger and various related effects.",
-    "dependencies" : [],
+    "dependencies" : [
+        {"id": "Inventory", "minVersion": "1.1.0"}
+    ],
     "isLibrary": true
 }
