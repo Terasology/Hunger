@@ -94,7 +94,6 @@ public class HungerAuthoritySystem extends BaseComponentSystem {
 
     public static final String HUNGER_DAMAGE_ACTION_ID = "Hunger Damage";
     private boolean destroyDrink = false;
-    private float expectedDecay;
 
     public void postBegin() {
         boolean processedOnce = false;
@@ -117,12 +116,11 @@ public class HungerAuthoritySystem extends BaseComponentSystem {
             for (EntityRef entity : entityManager.getEntitiesWith(HungerComponent.class,
                     AliveCharacterComponent.class)) {
                 HungerComponent hunger = entity.getComponent(HungerComponent.class);
-                expectedDecay = (healthDecreaseInterval * hunger.foodDecayPerSecond) / 1000;
+                final float expectedDecay = (healthDecreaseInterval * hunger.foodDecayPerSecond) / 1000;
                 // Send event to allow for other systems to modify hunger decay.
                 AffectHungerEvent affectHungerEvent = new AffectHungerEvent(expectedDecay);
                 entity.send(affectHungerEvent);
-                expectedDecay = affectHungerEvent.getResultValue();
-                hunger.lastCalculatedFood = Math.max(0, hunger.lastCalculatedFood - expectedDecay);
+                hunger.lastCalculatedFood = Math.max(0, hunger.lastCalculatedFood - affectHungerEvent.getResultValue());
                 hunger.lastCalculationTime = time.getGameTimeInMs();
                 entity.saveComponent(hunger);
 
