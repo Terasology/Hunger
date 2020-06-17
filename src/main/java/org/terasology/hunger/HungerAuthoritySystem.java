@@ -29,6 +29,7 @@ import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.hunger.component.FoodComponent;
 import org.terasology.hunger.component.HungerComponent;
+import org.terasology.hunger.event.AffectHungerEvent;
 import org.terasology.hunger.event.FoodConsumedEvent;
 import org.terasology.logic.characters.AliveCharacterComponent;
 import org.terasology.logic.common.ActivateEvent;
@@ -112,10 +113,14 @@ public class HungerAuthoritySystem extends BaseComponentSystem {
     @ReceiveEvent
     public void onPeriodicActionTriggered(PeriodicActionTriggeredEvent event, EntityRef entityUnused) {
         if (event.getActionId().equals(HUNGER_DAMAGE_ACTION_ID)) {
-            for (EntityRef entity : entityManager.getEntitiesWith(HungerComponent.class, AliveCharacterComponent.class)) {
+            for (EntityRef entity : entityManager.getEntitiesWith(HungerComponent.class,
+                    AliveCharacterComponent.class)) {
                 HungerComponent hunger = entity.getComponent(HungerComponent.class);
-                hunger.lastCalculatedFood = Math.max(0,
-                        hunger.lastCalculatedFood - (healthDecreaseInterval * hunger.foodDecayPerSecond) / 1000);
+                final float expectedDecay = (healthDecreaseInterval * hunger.foodDecayPerSecond) / 1000;
+                // Send event to allow for other systems to modify hunger decay.
+                AffectHungerEvent affectHungerEvent = new AffectHungerEvent(expectedDecay);
+                entity.send(affectHungerEvent);
+                hunger.lastCalculatedFood = Math.max(0, hunger.lastCalculatedFood - affectHungerEvent.getResultValue());
                 hunger.lastCalculationTime = time.getGameTimeInMs();
                 entity.saveComponent(hunger);
 
@@ -132,7 +137,7 @@ public class HungerAuthoritySystem extends BaseComponentSystem {
     /**
      * Cancels the BeforeHealEvent for an entity if their hunger level is lower than the health regen threshold.
      *
-     * @param event  The BeforeHealEvent, called before an entity is about to be healed.
+     * @param event The BeforeHealEvent, called before an entity is about to be healed.
      * @param entity The entity which is being healed.
      * @param hunger The HungerComponent object, containing settings for Hunger.
      */
@@ -147,7 +152,7 @@ public class HungerAuthoritySystem extends BaseComponentSystem {
     /**
      * Set's the players hunger to a maximum when spawning. Set's the last calculation time to the current game time.
      *
-     * @param event  The OnPlayerSpawnedEvent, called when a player is spawning into the world.
+     * @param event The OnPlayerSpawnedEvent, called when a player is spawning into the world.
      * @param player The player which is being spawned.
      * @param hunger The HungerComponent object, containing settings for Hunger.
      */
@@ -160,7 +165,7 @@ public class HungerAuthoritySystem extends BaseComponentSystem {
     /**
      * Set's the players hunger to a maximum when respawning. Set's the last calculation time to the current game time.
      *
-     * @param event  The OnPlayerRespawnedEvent, called when a player is respawning into the world.
+     * @param event The OnPlayerRespawnedEvent, called when a player is respawning into the world.
      * @param player The player which is being respawned.
      * @param hunger The HungerComponent object, containing settings for Hunger.
      */
@@ -180,8 +185,8 @@ public class HungerAuthoritySystem extends BaseComponentSystem {
      * This method registers it when an entity consumes food and adds the food to the entities HungerComponent.
      *
      * @param event The ActivateEvent called when an entity consumes food.
-     * @param item  The entity which is consuming the food.
-     * @param food  The Foodcomponent containing data about how much a certain type of food is filling.
+     * @param item The entity which is consuming the food.
+     * @param food The Foodcomponent containing data about how much a certain type of food is filling.
      */
     @ReceiveEvent
     public void foodConsumed(ActivateEvent event, EntityRef item, FoodComponent food) {
@@ -189,7 +194,8 @@ public class HungerAuthoritySystem extends BaseComponentSystem {
         EntityRef instigator = event.getInstigator();
         HungerComponent hunger = instigator.getComponent(HungerComponent.class);
         if (hunger != null) {
-            hunger.lastCalculatedFood = Math.min(hunger.maxFoodCapacity, HungerUtils.getHungerForEntity(instigator) + filling);
+            hunger.lastCalculatedFood = Math.min(hunger.maxFoodCapacity,
+                    HungerUtils.getHungerForEntity(instigator) + filling);
             hunger.lastCalculationTime = time.getGameTimeInMs();
             instigator.saveComponent(hunger);
             item.send(new FoodConsumedEvent(event));
@@ -205,7 +211,7 @@ public class HungerAuthoritySystem extends BaseComponentSystem {
      * This method deals with removal of food item after it is consumed.
      *
      * @param event The FoodConsumedEvent called when an entity consumes food.
-     * @param item  The entity which is consuming the food.
+     * @param item The entity which is consuming the food.
      */
     @ReceiveEvent(components = ItemComponent.class, priority = EventPriority.PRIORITY_TRIVIAL)
     public void usedItem(FoodConsumedEvent event, EntityRef item) {
