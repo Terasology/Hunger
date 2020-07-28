@@ -185,7 +185,7 @@ public class HungerAuthoritySystem extends BaseComponentSystem {
      */
     @ReceiveEvent
     public void foodConsumed(ActivateEvent event, EntityRef item, FoodComponent food) {
-        float filling = food.filling;
+        float filling = food.filling.getValue();
         EntityRef instigator = event.getInstigator();
         HungerComponent hunger = instigator.getComponent(HungerComponent.class);
         if (hunger != null) {

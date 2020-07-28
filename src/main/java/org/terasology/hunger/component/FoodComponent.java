@@ -16,11 +16,18 @@
 package org.terasology.hunger.component;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.logic.inventory.ItemDifferentiating;
+import org.terasology.utilities.modifiable.ModifiableValue;
 
-public class FoodComponent implements Component {
+
+/**
+ * This component uses the ModifiableValue type
+ * Any modifications to the data members of this component must be via ModifiableValue modifiers
+ * ModifiableValue.getValue can be used to get the value of the data members
+ */
+public class FoodComponent implements Component, ItemDifferentiating {
     /**
      * The amount of hunger this food restores when used.
      */
-    public float filling;
-
+    public ModifiableValue filling;
 }
