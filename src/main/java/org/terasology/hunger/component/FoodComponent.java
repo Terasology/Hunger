@@ -25,7 +25,7 @@ import org.terasology.utilities.modifiable.ModifiableValue;
  * Any modifications to the data members of this component must be via ModifiableValue modifiers
  * ModifiableValue.getValue can be used to get the value of the data members
  */
-public class FoodComponent implements Component, ItemDifferentiating {
+public class FoodComponent implements Component{
     /**
      * The amount of hunger this food restores when used.
      */
