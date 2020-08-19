@@ -20,10 +20,10 @@ import org.terasology.hunger.HungerUtils;
 import org.terasology.hunger.component.HungerComponent;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.registry.CoreRegistry;
-import org.terasology.rendering.nui.databinding.Binding;
-import org.terasology.rendering.nui.databinding.ReadOnlyBinding;
+import org.terasology.nui.databinding.Binding;
+import org.terasology.nui.databinding.ReadOnlyBinding;
 import org.terasology.rendering.nui.layers.hud.CoreHudWidget;
-import org.terasology.rendering.nui.widgets.UILoadBar;
+import org.terasology.nui.widgets.UILoadBar;
 
 
 public class HungerWindow extends CoreHudWidget {
