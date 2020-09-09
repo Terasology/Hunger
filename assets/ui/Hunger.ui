@@ -1,26 +1,26 @@
 {
-    "type": "HungerWindow",
-    "skin": "HUD",
-    "contents": {
-        "type": "relativeLayout",
-        "contents": [
-            {
-                "type": "UILoadBar",
-                "id": "hunger",
-                "animate": false,
-                "fillTexture": "Hunger:hungerBar",
-                "layoutInfo": {
-                    "width": 200,
-                    "height": 10,
-                    "position-horizontal-center": {
-                        "offset": -150
-                    },
-                    "position-bottom": {
-                        "target": "BOTTOM",
-                        "offset": 80
-                    }
-                }
-            }
-        ]
-    }
+  "type": "HungerWindow",
+  "skin": "HUD",
+  "contents": {
+    "type": "relativeLayout",
+    "contents": [
+      {
+        "type": "UILoadBar",
+        "id": "hunger",
+        "animate": false,
+        "fillTexture": "Hunger:hungerBar",
+        "layoutInfo": {
+          "width": 200,
+          "height": 10,
+          "position-horizontal-center": {
+            "offset": -150
+          },
+          "position-bottom": {
+            "target": "BOTTOM",
+            "offset": 80
+          }
+        }
+      }
+    ]
+  }
 }

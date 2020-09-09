@@ -1,98 +1,79 @@
-/*
- * Copyright 2013 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.hunger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.engine.Time;
-import org.terasology.entitySystem.entity.EntityManager;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.EventPriority;
-import org.terasology.entitySystem.event.ReceiveEvent;
-import org.terasology.entitySystem.prefab.Prefab;
-import org.terasology.entitySystem.prefab.PrefabManager;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterMode;
-import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.core.Time;
+import org.terasology.engine.entitySystem.entity.EntityManager;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.event.EventPriority;
+import org.terasology.engine.entitySystem.event.ReceiveEvent;
+import org.terasology.engine.entitySystem.prefab.Prefab;
+import org.terasology.engine.entitySystem.prefab.PrefabManager;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterMode;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.logic.characters.AliveCharacterComponent;
+import org.terasology.engine.logic.common.ActivateEvent;
+import org.terasology.engine.logic.delay.DelayManager;
+import org.terasology.engine.logic.delay.PeriodicActionTriggeredEvent;
+import org.terasology.engine.logic.inventory.ItemComponent;
+import org.terasology.engine.logic.players.event.OnPlayerRespawnedEvent;
+import org.terasology.engine.logic.players.event.OnPlayerSpawnedEvent;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.world.WorldComponent;
+import org.terasology.health.logic.event.ActivateRegenEvent;
+import org.terasology.health.logic.event.DeactivateRegenEvent;
+import org.terasology.health.logic.event.DoDamageEvent;
 import org.terasology.hunger.component.FoodComponent;
 import org.terasology.hunger.component.HungerComponent;
 import org.terasology.hunger.event.AffectHungerEvent;
 import org.terasology.hunger.event.FoodConsumedEvent;
-import org.terasology.logic.characters.AliveCharacterComponent;
-import org.terasology.logic.common.ActivateEvent;
-import org.terasology.logic.delay.DelayManager;
-import org.terasology.logic.delay.PeriodicActionTriggeredEvent;
-import org.terasology.logic.health.event.ActivateRegenEvent;
-import org.terasology.logic.health.event.DeactivateRegenEvent;
-import org.terasology.logic.health.event.DoDamageEvent;
-import org.terasology.logic.inventory.InventoryManager;
-import org.terasology.logic.inventory.InventoryUtils;
-import org.terasology.logic.inventory.ItemComponent;
-import org.terasology.logic.players.event.OnPlayerRespawnedEvent;
-import org.terasology.logic.players.event.OnPlayerSpawnedEvent;
-import org.terasology.registry.In;
-import org.terasology.world.WorldComponent;
+import org.terasology.inventory.logic.InventoryManager;
+import org.terasology.inventory.logic.InventoryUtils;
 
-import static org.terasology.logic.health.RegenAuthoritySystem.BASE_REGEN;
+import static org.terasology.health.logic.RegenAuthoritySystem.BASE_REGEN;
 
 /**
  * The authority system monitoring player hunger levels, related events and commands.
  */
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class HungerAuthoritySystem extends BaseComponentSystem {
+    public static final String HUNGER_DAMAGE_ACTION_ID = "Hunger Damage";
     /**
      * The logger for debugging to the log files.
      */
     private static final Logger logger = LoggerFactory.getLogger(HungerAuthoritySystem.class);
-
+    /**
+     * The interval (in milliseconds) at which healthDecreaseAmount (above) is applied to the component.
+     */
+    public int healthDecreaseInterval = 3000;
     /**
      * Reference to the EntityManager, used for getting all entities who are affected by hunger.
      */
     @In
     private EntityManager entityManager;
-
     /**
      * Reference to the InventoryManager, used for removing consumed items from inventory.
      */
     @In
     private InventoryManager inventoryManager;
-
     /**
      * Reference to the PrefabManager, used for getting damageType prefab.
      */
     @In
     private PrefabManager prefabManager;
-
     /**
      * Reference to the current time, used for calculating if the food of an entity has to be decreased.
      */
     @In
     private Time time;
-
     /**
      * Reference to DelayManager, used for addPeriodicAction.
      */
     @In
     private DelayManager delayManager;
-    /**
-     * The interval (in milliseconds) at which healthDecreaseAmount (above) is applied to the component.
-     */
-    public int healthDecreaseInterval = 3000;
-
-    public static final String HUNGER_DAMAGE_ACTION_ID = "Hunger Damage";
     private boolean destroyDrink = false;
 
     public void postBegin() {
