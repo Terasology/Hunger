@@ -17,36 +17,35 @@ package org.terasology.hunger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.engine.Time;
-import org.terasology.entitySystem.entity.EntityManager;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.EventPriority;
-import org.terasology.entitySystem.event.ReceiveEvent;
-import org.terasology.entitySystem.prefab.Prefab;
-import org.terasology.entitySystem.prefab.PrefabManager;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterMode;
-import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.core.Time;
+import org.terasology.engine.entitySystem.entity.EntityManager;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.event.EventPriority;
+import org.terasology.engine.entitySystem.event.ReceiveEvent;
+import org.terasology.engine.entitySystem.prefab.Prefab;
+import org.terasology.engine.entitySystem.prefab.PrefabManager;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterMode;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.logic.characters.AliveCharacterComponent;
+import org.terasology.engine.logic.common.ActivateEvent;
+import org.terasology.engine.logic.delay.DelayManager;
+import org.terasology.engine.logic.delay.PeriodicActionTriggeredEvent;
+import org.terasology.engine.logic.health.event.ActivateRegenEvent;
+import org.terasology.engine.logic.health.event.DoDamageEvent;
+import org.terasology.engine.logic.inventory.InventoryManager;
+import org.terasology.engine.logic.inventory.InventoryUtils;
+import org.terasology.engine.logic.inventory.ItemComponent;
+import org.terasology.engine.logic.players.event.OnPlayerRespawnedEvent;
+import org.terasology.engine.logic.players.event.OnPlayerSpawnedEvent;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.world.WorldComponent;
 import org.terasology.hunger.component.FoodComponent;
 import org.terasology.hunger.component.HungerComponent;
 import org.terasology.hunger.event.AffectHungerEvent;
 import org.terasology.hunger.event.FoodConsumedEvent;
-import org.terasology.logic.characters.AliveCharacterComponent;
-import org.terasology.logic.common.ActivateEvent;
-import org.terasology.logic.delay.DelayManager;
-import org.terasology.logic.delay.PeriodicActionTriggeredEvent;
-import org.terasology.logic.health.event.ActivateRegenEvent;
-import org.terasology.logic.health.event.DeactivateRegenEvent;
-import org.terasology.logic.health.event.DoDamageEvent;
-import org.terasology.logic.inventory.InventoryManager;
-import org.terasology.logic.inventory.InventoryUtils;
-import org.terasology.logic.inventory.ItemComponent;
-import org.terasology.logic.players.event.OnPlayerRespawnedEvent;
-import org.terasology.logic.players.event.OnPlayerSpawnedEvent;
-import org.terasology.registry.In;
-import org.terasology.world.WorldComponent;
 
-import static org.terasology.logic.health.RegenAuthoritySystem.BASE_REGEN;
+import static org.terasology.engine.logic.health.RegenAuthoritySystem.BASE_REGEN;
 
 /**
  * The authority system monitoring player hunger levels, related events and commands.
@@ -145,7 +144,7 @@ public class HungerAuthoritySystem extends BaseComponentSystem {
     public void onHealthRegen(ActivateRegenEvent event, EntityRef entity,
                               HungerComponent hunger) {
         if (HungerUtils.getHungerForEntity(entity) < hunger.healthStopRegenThreshold && event.id.equals(BASE_REGEN)) {
-            entity.send(new DeactivateRegenEvent());
+            entity.send(new org.terasology.engine.logic.health.event.DeactivateRegenEvent());
         }
     }
 

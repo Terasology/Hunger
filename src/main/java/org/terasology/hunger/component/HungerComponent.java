@@ -15,8 +15,8 @@
  */
 package org.terasology.hunger.component;
 
-import org.terasology.entitySystem.Component;
-import org.terasology.network.Replicate;
+import org.terasology.engine.entitySystem.Component;
+import org.terasology.engine.network.Replicate;
 
 public class HungerComponent implements Component {
     //General Hunger Settings

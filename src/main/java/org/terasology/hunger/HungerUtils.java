@@ -15,10 +15,10 @@
  */
 package org.terasology.hunger;
 
-import org.terasology.engine.Time;
-import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.engine.core.Time;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.registry.CoreRegistry;
 import org.terasology.hunger.component.HungerComponent;
-import org.terasology.registry.CoreRegistry;
 
 public final class HungerUtils {
     private HungerUtils() {

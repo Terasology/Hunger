@@ -15,9 +15,9 @@
  */
 package org.terasology.hunger.event;
 
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.Event;
-import org.terasology.logic.common.ActivateEvent;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.event.Event;
+import org.terasology.engine.logic.common.ActivateEvent;
 
 /** This event is triggered after the Activate event has been consumed upon eating of a food item */
 public class FoodConsumedEvent implements Event {

@@ -15,14 +15,14 @@
  */
 package org.terasology.hunger.ui;
 
-import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.logic.players.LocalPlayer;
+import org.terasology.engine.registry.CoreRegistry;
+import org.terasology.engine.rendering.nui.layers.hud.CoreHudWidget;
 import org.terasology.hunger.HungerUtils;
 import org.terasology.hunger.component.HungerComponent;
-import org.terasology.logic.players.LocalPlayer;
-import org.terasology.registry.CoreRegistry;
 import org.terasology.nui.databinding.Binding;
 import org.terasology.nui.databinding.ReadOnlyBinding;
-import org.terasology.rendering.nui.layers.hud.CoreHudWidget;
 import org.terasology.nui.widgets.UILoadBar;
 
 
