@@ -1,19 +1,19 @@
 {
-  "id": "Hunger",
-  "version": "1.2.0-SNAPSHOT",
-  "author": "UltimateBudgie, Marcin Sciesinski <marcins78@gmail.com>",
-  "displayName": "Hunger and Food",
-  "description": "This module introduces Hunger and various related effects.",
-  "dependencies": [
-    {
-      "id": "Health",
-      "minVersion": "1.0.0"
-    },
-    {
-      "id": "Inventory",
-      "minVersion": "1.1.0"
-    }
-  ],
-  "isLibrary": true,
-  "isAugmentation": true
+    "id": "Hunger",
+    "version": "1.2.0-SNAPSHOT",
+    "author": "UltimateBudgie, Marcin Sciesinski <marcins78@gmail.com>",
+    "displayName": "Hunger and Food",
+    "description": "This module introduces Hunger and various related effects.",
+    "dependencies": [
+        {
+            "id": "Health",
+            "minVersion": "2.0.0-SNAPSHOT"
+        },
+        {
+            "id": "Inventory",
+            "minVersion": "1.1.0"
+        }
+    ],
+    "isLibrary": true,
+    "isAugmentation": true
 }

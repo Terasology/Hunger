@@ -31,8 +31,9 @@ import org.terasology.engine.logic.characters.AliveCharacterComponent;
 import org.terasology.engine.logic.common.ActivateEvent;
 import org.terasology.engine.logic.delay.DelayManager;
 import org.terasology.engine.logic.delay.PeriodicActionTriggeredEvent;
-import org.terasology.logic.health.event.ActivateRegenEvent;
-import org.terasology.logic.health.event.DoDamageEvent;
+import org.terasology.module.health.events.ActivateRegenEvent;
+import org.terasology.module.health.events.DoDamageEvent;
+import org.terasology.module.health.events.DeactivateRegenEvent;
 import org.terasology.module.inventory.systems.InventoryManager;
 import org.terasology.module.inventory.systems.InventoryUtils;
 import org.terasology.engine.logic.inventory.ItemComponent;
@@ -45,7 +46,7 @@ import org.terasology.hunger.component.HungerComponent;
 import org.terasology.hunger.event.AffectHungerEvent;
 import org.terasology.hunger.event.FoodConsumedEvent;
 
-import static org.terasology.logic.health.RegenAuthoritySystem.BASE_REGEN;
+import static org.terasology.module.health.systems.RegenAuthoritySystem.BASE_REGEN;
 
 /**
  * The authority system monitoring player hunger levels, related events and commands.
@@ -144,7 +145,7 @@ public class HungerAuthoritySystem extends BaseComponentSystem {
     public void onHealthRegen(ActivateRegenEvent event, EntityRef entity,
                               HungerComponent hunger) {
         if (HungerUtils.getHungerForEntity(entity) < hunger.healthStopRegenThreshold && event.id.equals(BASE_REGEN)) {
-            entity.send(new org.terasology.logic.health.event.DeactivateRegenEvent());
+            entity.send(new DeactivateRegenEvent());
         }
     }
 
