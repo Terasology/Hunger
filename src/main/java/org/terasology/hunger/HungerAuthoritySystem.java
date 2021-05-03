@@ -31,11 +31,6 @@ import org.terasology.engine.logic.characters.AliveCharacterComponent;
 import org.terasology.engine.logic.common.ActivateEvent;
 import org.terasology.engine.logic.delay.DelayManager;
 import org.terasology.engine.logic.delay.PeriodicActionTriggeredEvent;
-import org.terasology.module.health.events.ActivateRegenEvent;
-import org.terasology.module.health.events.DoDamageEvent;
-import org.terasology.module.health.events.DeactivateRegenEvent;
-import org.terasology.module.inventory.systems.InventoryManager;
-import org.terasology.module.inventory.systems.InventoryUtils;
 import org.terasology.engine.logic.inventory.ItemComponent;
 import org.terasology.engine.logic.players.event.OnPlayerRespawnedEvent;
 import org.terasology.engine.logic.players.event.OnPlayerSpawnedEvent;
@@ -45,8 +40,12 @@ import org.terasology.hunger.component.FoodComponent;
 import org.terasology.hunger.component.HungerComponent;
 import org.terasology.hunger.event.AffectHungerEvent;
 import org.terasology.hunger.event.FoodConsumedEvent;
+import org.terasology.module.health.events.BeforeRegenEvent;
+import org.terasology.module.health.events.DoDamageEvent;
+import org.terasology.module.inventory.systems.InventoryManager;
+import org.terasology.module.inventory.systems.InventoryUtils;
 
-import static org.terasology.module.health.systems.RegenAuthoritySystem.BASE_REGEN;
+import static org.terasology.module.health.core.BaseRegenAuthoritySystem.BASE_REGEN;
 
 /**
  * The authority system monitoring player hunger levels, related events and commands.
@@ -135,17 +134,20 @@ public class HungerAuthoritySystem extends BaseComponentSystem {
     }
 
     /**
-     * Cancels the BeforeHealEvent for an entity if their hunger level is lower than the health regen threshold.
+     * Cancels the base regeneration for an entity if their hunger level is lower than the health regen threshold. This
+     * only affects the base regeneration action. All other registered regeneration actions are ignored.
      *
-     * @param event The BeforeHealEvent, called before an entity is about to be healed.
-     * @param entity The entity which is being healed.
-     * @param hunger The HungerComponent object, containing settings for Hunger.
+     * @param event The collector event for regeneration actions, called before an entity's health is about to
+     *         be regenerated.
+     * @param entity The entity whose health is about to be regenerated.
+     * @param hunger The entity's hunger configuration.
      */
     @ReceiveEvent
-    public void onHealthRegen(ActivateRegenEvent event, EntityRef entity,
-                              HungerComponent hunger) {
-        if (HungerUtils.getHungerForEntity(entity) < hunger.healthStopRegenThreshold && event.id.equals(BASE_REGEN)) {
-            entity.send(new DeactivateRegenEvent());
+    public void beforeBaseRegen(BeforeRegenEvent event, EntityRef entity, HungerComponent hunger) {
+        if (event.getId().equals(BASE_REGEN)) {
+            if (HungerUtils.getHungerForEntity(entity) < hunger.healthStopRegenThreshold) {
+                event.consume();
+            }
         }
     }
 
