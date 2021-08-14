@@ -16,7 +16,7 @@ public class FoodComponent implements Component<FoodComponent> {
     public ModifiableValue filling;
 
     @Override
-    public void copy(FoodComponent other) {
+    public void copyFrom(FoodComponent other) {
         ModifiableValue newFilling = new ModifiableValue(other.filling.getBaseValue());
         newFilling.setMultiplier(other.filling.getMultiplier());
         newFilling.setPreModifier(other.filling.getPreModifier());

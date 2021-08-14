@@ -53,7 +53,7 @@ public class HungerComponent implements Component<HungerComponent> {
     public int healthDecreaseAmount = 15;
 
     @Override
-    public void copy(HungerComponent other) {
+    public void copyFrom(HungerComponent other) {
         this.maxFoodCapacity = other.maxFoodCapacity;
         this.lastCalculatedFood = other.lastCalculatedFood;
         this.lastCalculationTime = other.lastCalculationTime;
