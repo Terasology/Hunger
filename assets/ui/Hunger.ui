@@ -13,14 +13,31 @@
                     "width": 200,
                     "height": 10,
                     "position-horizontal-center": {
-                        "offset": -150
+                        "offset": -130
                     },
                     "position-bottom": {
                         "target": "BOTTOM",
                         "offset": 85
                     }
                 }
-            }
+            },
+            {
+                "type": "UIImage",
+                "image": "Hunger:hungerIcon",
+                "id": "hungerIcon",
+                "layoutInfo": {
+                    "width": 15,
+                    "height": 15,
+                    "position-horizontal-center": {
+                        "offset": -270
+                    },
+                    "position-bottom": {
+                        "target": "BOTTOM",
+                        "offset": 80
+                    }
+                }
+            }            
         ]
     }
 }
+
