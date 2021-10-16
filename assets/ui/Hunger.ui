@@ -5,6 +5,22 @@
         "type": "relativeLayout",
         "contents": [
             {
+                "type": "UIImage",
+                "image": "Hunger:hungerIcon",
+                "id": "hungerIcon",
+                "layoutInfo": {
+                    "width": 15,
+                    "height": 18,
+                    "position-horizontal-center": {
+                        "offset": -270
+                    },
+                    "position-bottom": {
+                        "target": "BOTTOM",
+                        "offset": 81
+                    }
+                }
+            },
+            {
                 "type": "UILoadBar",
                 "id": "hunger",
                 "animate": false,
@@ -20,23 +36,8 @@
                         "offset": 85
                     }
                 }
-            },
-            {
-                "type": "UIImage",
-                "image": "Hunger:hungerIcon",
-                "id": "hungerIcon",
-                "layoutInfo": {
-                    "width": 15,
-                    "height": 18,
-                    "position-horizontal-center": {
-                        "offset": -270
-                    },
-                    "position-bottom": {
-                        "target": "BOTTOM",
-                        "offset": 81
-                    }
-                }
-            }            
+            }
+       
         ]
     }
 }
