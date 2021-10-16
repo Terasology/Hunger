@@ -11,8 +11,10 @@
                 "layoutInfo": {
                     "width": 15,
                     "height": 18,
-                    "position-horizontal-center": {
-                        "offset": -270
+                    "position-left": {
+                        "target": "LEFT",
+                        "widget": "hungerIcon",
+                        "offset": 47
                     },
                     "position-bottom": {
                         "target": "BOTTOM",
