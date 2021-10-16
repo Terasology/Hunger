@@ -33,7 +33,7 @@
                     },
                     "position-bottom": {
                         "target": "BOTTOM",
-                        "offset": 80
+                        "offset": 81
                     }
                 }
             }            
