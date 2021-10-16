@@ -27,7 +27,7 @@
                 "id": "hungerIcon",
                 "layoutInfo": {
                     "width": 15,
-                    "height": 15,
+                    "height": 18,
                     "position-horizontal-center": {
                         "offset": -270
                     },
