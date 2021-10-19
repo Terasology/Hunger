@@ -11,10 +11,8 @@
                 "layoutInfo": {
                     "width": 15,
                     "height": 18,
-                    "position-left": {
-                        "target": "LEFT",
-                        "widget": "hungerIcon",
-                        "offset": 47
+                    "position-horizontal-center": {
+                        "offset": -273
                     },
                     "position-bottom": {
                         "target": "BOTTOM",
@@ -30,12 +28,15 @@
                 "layoutInfo": {
                     "width": 200,
                     "height": 10,
-                    "position-horizontal-center": {
-                        "offset": -130
+                    "position-left": {
+                        "target": "LEFT",
+                        "widget": "hungerIcon",
+                        "offset": 47
                     },
                     "position-bottom": {
                         "target": "BOTTOM",
-                        "offset": 85
+                        "widget": "hungerIcon",
+                        "offset": 4
                     }
                 }
             }
